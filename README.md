@@ -4,9 +4,8 @@ https://develop.ricompany.info/RIFDC/
 
 # Change log
 
-__21.Nov.2021__
-
-Framework moved to .Net 5.0
+__21.Nov.2021__  
+Framework moved to .Net 5.0  
 Service functions separated as dll and placed into nuget package
 
 
