@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Text;
-using CommonFunctions;
+using RICOMPANY.CommonFunctions;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -1248,7 +1248,7 @@ namespace RIFDC
         }
 
 
-        public new OleDbConnection activeConnection
+        public new MySqlConnection activeConnection
         {
             get { return activeConnection; }
         }

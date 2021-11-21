@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using CommonFunctions;
+using RICOMPANY.CommonFunctions;
 using System.IO;
 
 
@@ -100,6 +100,8 @@ namespace RIFDC
                 //Read the first line of text
                 string line;
                 List<string> _items = new List<string>();
+
+                
 
                 do
                 {

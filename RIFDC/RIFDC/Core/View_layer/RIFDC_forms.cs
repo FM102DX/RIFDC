@@ -1,4 +1,4 @@
-﻿using CommonFunctions;
+﻿using RICOMPANY.CommonFunctions;
 using ObjectParameterEngine;
 using StateMachineNamespace;
 using System;
@@ -441,7 +441,7 @@ namespace RIFDC
 
             if (selectedItemsIds.Count==0 && this.multiSelectionMode==true)
             {
-                fn.mb_info("Элементы не выбраны");
+                ServiceFucntions.mb_info("Элементы не выбраны");
                 return;
             }
 
@@ -592,7 +592,7 @@ namespace RIFDC
                 Lib.EventProcessigResult r0 = saveRecord(c);
                 if (!r0.success)
                 {
-                    fn.mb_info(r0.msg);
+                    ServiceFucntions.mb_info(r0.msg);
 
                     //теперь еще надо не дать уйти с поля
                     c.Focus();
@@ -623,7 +623,7 @@ namespace RIFDC
                 if (!r.success)
                 {
 
-                    fn.mb_info(r.msg);
+                    ServiceFucntions.mb_info(r.msg);
                     tbb.targetControl.Focus(); //не дать уйти с поля
                     tbb.targetControl.selectionStart = fn.toStringNullConvertion(tbb.getTargetControlValue()).Length;
                 }
@@ -708,7 +708,7 @@ namespace RIFDC
                     {
                         //если leave валидация !success, возвращаем пользователя на поле, показываем сообщение
                         tb.Focus();
-                        fn.mb_info(vr.validationMsg);
+                        ServiceFucntions.mb_info(vr.validationMsg);
                     }
                     rez = vr.validationSuccess;
                 }
@@ -1081,7 +1081,7 @@ namespace RIFDC
 
                                 if (parent.multiSelectionMode)
                                 {
-                                    b = fn.mb_confirmAction("Удалить выделенные записи?");
+                                    b = ServiceFucntions.mb_confirmAction("Удалить выделенные записи?");
                                     
                                     if (!b) return;
 
@@ -1096,7 +1096,7 @@ namespace RIFDC
                                 else
                                 {
 
-                                    b = fn.mb_confirmAction("Удалить?");
+                                    b = ServiceFucntions.mb_confirmAction("Удалить?");
 
                                     if (!b) return;
 
@@ -1494,7 +1494,7 @@ namespace RIFDC
 
                                 //удалить запись
 
-                                bool b = fn.mb_confirmAction("Удалить?");
+                                bool b = ServiceFucntions.mb_confirmAction("Удалить?");
 
                                 if (!b) return;
 

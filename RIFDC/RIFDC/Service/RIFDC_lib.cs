@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using CommonFunctions;
+using RICOMPANY.CommonFunctions;
 using RIFDC;
 using System.Text.RegularExpressions;
 using System.Drawing;
@@ -1011,7 +1011,7 @@ namespace RIFDC
                 else
                 {
                     //TODO более сложная обработка исключений
-                    fn.mb_info("Созданное правило фильтрации не было добавлено: " + fvr.validationMsg);
+                    ServiceFucntions.mb_info("Созданное правило фильтрации не было добавлено: " + fvr.validationMsg);
                 }
             }
 
@@ -1053,7 +1053,7 @@ namespace RIFDC
                 {
                     if (!filteringExpressionIsValid(value))
                     {
-                        fn.mb_info("В объект Filter передано некорректное filtering expression: " + value);
+                        ServiceFucntions.mb_info("В объект Filter передано некорректное filtering expression: " + value);
                         //_filteringExpression = "";
                     }
                     else
