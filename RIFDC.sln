@@ -1,18 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6650D2C7-666D-4C6C-8568-E8C7ABA6BCBB}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RIFDC_DLL", "RIFDC\RIFDC_DLL.csproj", "{895DA7DB-42E4-4E17-BCAE-85E08DF3E800}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RIFDC_DLL", "RIFDC\RIFDC_DLL.csproj", "{895DA7DB-42E4-4E17-BCAE-85E08DF3E800}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeePointsDemo", "CoffeePointsDemo\CoffeePointsDemo.csproj", "{1B24BDEE-7264-4214-A879-44955FBED600}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeePointsDemo", "CoffeePointsDemo\CoffeePointsDemo.csproj", "{1B24BDEE-7264-4214-A879-44955FBED600}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COMMONFUNCTIONS_DLL", "CommonFunctions\COMMONFUNCTIONS_DLL.csproj", "{A2835956-1B0E-4654-BD49-51FD62795943}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMMONFUNCTIONS_DLL", "CommonFunctions\COMMONFUNCTIONS_DLL.csproj", "{A2835956-1B0E-4654-BD49-51FD62795943}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
