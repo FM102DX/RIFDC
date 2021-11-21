@@ -2,7 +2,7 @@
 C# framework to create data-oriented applications
 https://develop.ricompany.info/RIFDC/
 
-#Change log
+# Change log
 
 __21.Nov.2021__
 Framework ported under .Net 5.0
