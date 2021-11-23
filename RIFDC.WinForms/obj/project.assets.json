@@ -959,7 +959,10 @@
   },
   "projectFileDependencyGroups": {
     "net5.0-windows7.0": [
-      "RIFDC >= 1.0.0"
+      "CommonFunctionsWinForms >= 1.0.0",
+      "RIFDC >= 1.0.0",
+      "Ricompany.ObjectParametersEngine >= 1.0.0",
+      "Ricompany.StateMachine >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -970,11 +973,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Develop\\RIFDC\\Actual5\\CoffeePointsDemo\\CoffeePointsDemo.csproj",
-      "projectName": "CoffeePointsDemo",
-      "projectPath": "C:\\Develop\\RIFDC\\Actual5\\CoffeePointsDemo\\CoffeePointsDemo.csproj",
+      "projectUniqueName": "C:\\Develop\\RIFDC\\Actual5\\RIFDC.WinForms\\RIFDC.WinForms.csproj",
+      "projectName": "RIFDC.WinForms",
+      "projectPath": "C:\\Develop\\RIFDC\\Actual5\\RIFDC.WinForms\\RIFDC.WinForms.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Develop\\RIFDC\\Actual5\\CoffeePointsDemo\\obj\\",
+      "outputPath": "C:\\Develop\\RIFDC\\Actual5\\RIFDC.WinForms\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -999,6 +1002,15 @@
           "projectReferences": {
             "C:\\Develop\\RIFDC\\Actual3\\RIFDC\\RIFDC.Core.csproj": {
               "projectPath": "C:\\Develop\\RIFDC\\Actual3\\RIFDC\\RIFDC.Core.csproj"
+            },
+            "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsWinForms\\CommonFunctionsWinForms.csproj": {
+              "projectPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsWinForms\\CommonFunctionsWinForms.csproj"
+            },
+            "C:\\Develop\\RI\\CommonFunctions\\ObjectParametersEngine\\ObjectParametersEngine.csproj": {
+              "projectPath": "C:\\Develop\\RI\\CommonFunctions\\ObjectParametersEngine\\ObjectParametersEngine.csproj"
+            },
+            "C:\\Develop\\RI\\CommonFunctions\\StateMachine\\StateMachine.csproj": {
+              "projectPath": "C:\\Develop\\RI\\CommonFunctions\\StateMachine\\StateMachine.csproj"
             }
           }
         }
