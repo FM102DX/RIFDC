@@ -30,7 +30,6 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.grpOperationSetValue = new System.Windows.Forms.TabPage();
-            this.tbValue = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.cbxSetValueParameter = new System.Windows.Forms.ComboBox();
@@ -55,7 +54,6 @@
             // 
             // grpOperationSetValue
             // 
-            this.grpOperationSetValue.Controls.Add(this.tbValue);
             this.grpOperationSetValue.Controls.Add(this.label3);
             this.grpOperationSetValue.Controls.Add(this.label2);
             this.grpOperationSetValue.Controls.Add(this.cbxSetValueParameter);
@@ -66,16 +64,6 @@
             this.grpOperationSetValue.TabIndex = 0;
             this.grpOperationSetValue.Text = "Присвоение значения";
             this.grpOperationSetValue.UseVisualStyleBackColor = true;
-            // 
-            // tbValue
-            // 
-            this.tbValue.Location = new System.Drawing.Point(19, 83);
-            this.tbValue.Multiline = true;
-            this.tbValue.Name = "tbValue";
-            this.tbValue.Size = new System.Drawing.Size(341, 120);
-            this.tbValue.TabIndex = 3;
-            this.tbValue.TextChanged += new System.EventHandler(this.tbValue_TextChanged);
-            this.tbValue.Leave += new System.EventHandler(this.tbValue_Leave);
             // 
             // label3
             // 
@@ -189,6 +177,5 @@
         private System.Windows.Forms.Button btnDoAction;
         private System.Windows.Forms.Label ibTargetObjects;
         private System.Windows.Forms.Button button1;
-        public System.Windows.Forms.TextBox tbValue;
     }
 }

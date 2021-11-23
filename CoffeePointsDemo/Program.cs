@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using RIFDC;
-using RICOMPANY.CommonFunctions;
-
+using Ricompany.CommonFunctions;
+using Ricompany.CommonFunctionsWinForms;
 
 namespace CoffeePointsDemo
 {
@@ -63,7 +63,7 @@ namespace CoffeePointsDemo
 
             if (!or.success)
             {
-                ServiceFucntions.mb_info("Ошибка подключения, программа остановлена");
+                FnWin.mb_info("Ошибка подключения, программа остановлена");
                 return;
             }
 

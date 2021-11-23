@@ -9,10 +9,11 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using RICOMPANY.CommonFunctions;
+using CommonFunctions;
 using RIFDC;
 using System.Text.RegularExpressions;
 using System.Drawing;
+
 
 //сервисные классы 123 456 
 
@@ -67,6 +68,28 @@ namespace RIFDC
         public interface IControlFormat
         {
             List<IControlFormatLine> lines { get; set; }
+        }
+
+        public class MultipleOperationHandler
+        {
+
+            List<Lib.ObjectOperationResult> _rezList;
+
+            public MultipleOperationHandler(List<Lib.ObjectOperationResult> rezList)
+            {
+                _rezList = rezList;
+            }
+
+            public int totalCount { get { return _rezList.Count(); } }
+
+            public int successCount { get { return _rezList.Where(x => x.success).Count(); } }
+            
+            public int failCount { get { return _rezList.Where(x => !x.success).Count(); } }
+
+            public string rezultMsgText1 { get { return $"Обработано объектов: {totalCount} {fn.chr13} успешно: {successCount} {fn.chr13} ошибка: {failCount} ";} }
+            
+
+
         }
         public interface IControlFormatLine
         {
@@ -134,7 +157,6 @@ namespace RIFDC
             {
                 foreach (DataElement x in items)
                 {
-                    //fn.dp(string.Format("name={0} x.name={1}", name, x.name));
                     if (x.name.ToLower() == name.ToLower()) 
                     {
                         return x.value; 
@@ -142,6 +164,19 @@ namespace RIFDC
                 }
                 return null;
             }
+
+            public void setValueByName(string name, object value)
+            {
+                foreach (DataElement x in items)
+                {
+                    if (x.name.ToLower() == name.ToLower())
+                    {
+                        x.value = value;
+                        return;
+                    }
+                }
+            }
+
             public void addNewElement(string _name, object _value)
             {
                 DataElement d = new DataElement() { name = _name, value = _value };
@@ -151,6 +186,11 @@ namespace RIFDC
             {
                 public string name { get; set; }
                 public object value { get; set; }
+            }
+
+            public string getMyDump()
+            {
+                return string.Join(";", items.Select(x=> $"{x.name}={x.value}"));
             }
         }
 
@@ -802,16 +842,23 @@ namespace RIFDC
 
         }
 
+        public delegate IDataCluster getExcelSTDCInstance(StaticExcelFile targetFile);
+
         public class InterFormMessage
         {
             //соообщение, которое одна форма передает другой когда, например, вы открываете одну форму из другой
             public IDataFormComponent caller;
             public IKeepable targetObject;
+            public IKeepable sampleObject;
             public string msg;
             public RelationsPackage realtionspackage;
             public IKeeper targetKeeper;
             public List<string> selectedItemsIds;
-            
+            public getExcelSTDCInstance excelStaticDelegate; // делегат, который возвращает искомый датакластер
+            public string targetEntityName;
+            public IControlFormat controlFormat;
+            public IDataRoom dataRoom;
+
             public InterFormMessage()
             {
 
@@ -827,7 +874,6 @@ namespace RIFDC
                 return d;
             }
         }
-
 
         public static bool valueIsValidForType(string value, FieldTypeEnum fieldType)
         {
@@ -1011,7 +1057,7 @@ namespace RIFDC
                 else
                 {
                     //TODO более сложная обработка исключений
-                    ServiceFucntions.mb_info("Созданное правило фильтрации не было добавлено: " + fvr.validationMsg);
+                    fn.mb_info("Созданное правило фильтрации не было добавлено: " + fvr.validationMsg);
                 }
             }
 
@@ -1053,7 +1099,7 @@ namespace RIFDC
                 {
                     if (!filteringExpressionIsValid(value))
                     {
-                        ServiceFucntions.mb_info("В объект Filter передано некорректное filtering expression: " + value);
+                        fn.mb_info("В объект Filter передано некорректное filtering expression: " + value);
                         //_filteringExpression = "";
                     }
                     else

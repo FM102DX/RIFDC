@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Text;
-using RICOMPANY.CommonFunctions;
+using CommonFunctions;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -56,9 +56,9 @@ namespace RIFDC
             return _actualCluster.saveObject(t);
         }
 
-        public Lib.DbOperationResult checkObjectTable(IKeepable sampleObject)
+        public Lib.DbOperationResult checkObjectTable(IKeepable sampleObject, bool drop = false)
         {
-            return _actualCluster.checkObjectTable(sampleObject);
+            return _actualCluster.checkObjectTable(sampleObject, drop);
         }
 
         public List<IUniversalRowDataContainer> makeGroupQuery(IKeeper keeper, Lib.GroupQueryTypeEnum groupQueryType, Relations.Relation targetRelation, string targetField)

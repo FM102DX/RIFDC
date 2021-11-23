@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Text;
-using RICOMPANY.CommonFunctions;
+using CommonFunctions;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -27,9 +27,7 @@ namespace RIFDC
         {
             //здесь для каждого типа сервера бд (aceess, mysql и др. указывается свой способ получения connectionString) 
             get;
-
         }
-        //virtual
 
         private Lib.Filter _actualFilter;
 
@@ -179,6 +177,7 @@ namespace RIFDC
         public Lib.DbOperationResult connect()
         {
             Lib.DbOperationResult cr = new Lib.DbOperationResult();
+
             MySqlConnection cnn = new MySqlConnection();
 
             cnn.ConnectionString = connectionString;
@@ -187,16 +186,12 @@ namespace RIFDC
             {
                 cnn.Open();
                 activeConnection = cnn;
+                return Lib.DbOperationResult.sayOk(cnn.ConnectionString);
             }
             catch (Exception exception)
             {
-                cr.success = false;
-                cr.msg = exception.Message;
-                return cr;
+                return Lib.DbOperationResult.sayNo(exception.Message);
             }
-            cr.success = true;
-
-            return cr;
         }
 
         public Lib.DbOperationResult reconnect()
@@ -248,8 +243,30 @@ namespace RIFDC
 
 
 
-        public Lib.DbOperationResult checkObjectTable(IKeepable t)
+        public Lib.DbOperationResult checkObjectTable(IKeepable t, bool drop=false)
         {
+            MySqlCommand com;
+            string commStr;
+            if (drop)
+            {
+                //если он true, надо удалить таблицу
+                //TODO ОПАСНО ЭТО!
+                try
+                {
+                    commStr = $"drop table {t.tableName}";
+                    Logger.log("DB", "EXECUTING QUERY: " + commStr);
+                    com = new MySqlCommand(commStr, activeConnection);
+                    int rez= com.ExecuteNonQuery();
+                    Logger.log("DB", $"RESULT IS: {rez}");
+
+                }
+                    catch (Exception ex)
+                    {
+                        Logger.log("DB", "ERRROR: " + ex.Message);
+                        //   return Lib.DbOperationResult.sayNo(ex.Message);
+                    }
+                }
+            
             TableChecker tableChecker = new TableChecker(activeConnection, t);
             return tableChecker.checkTable();
         }
@@ -279,19 +296,19 @@ namespace RIFDC
                 MySqlCommand com = new MySqlCommand(commStr, activeConnection);
                 Logger.log("DB", "EXECUTING QUERY: " + commStr);
                 rez = com.ExecuteNonQuery();
+                if (rez > 0)
+                {
+                    return Lib.DbOperationResult.sayOk();
+                }
+                else
+                {
+                    return Lib.DbOperationResult.sayNo();
+                }
             }
             catch (Exception e)
             {
                 Logger.log("DB", "ERROR: " + errStr);
                 errStr = e.Message;
-            }
-
-            if (rez > 0)
-            {
-                return Lib.DbOperationResult.sayOk("");
-            }
-            else
-            {
                 return Lib.DbOperationResult.sayNo(errStr);
             }
         }
@@ -412,7 +429,9 @@ namespace RIFDC
             Lib.UniversalDataKeeper d;
 
             cmdText = generateSelectCommand(t, filter);
-            MySqlDateTime mySQLDateTime;
+
+            MySqlDateTime msdt;
+
             //теперь читаем
             MySqlCommand cmd = new MySqlCommand(cmdText, activeConnection);
             object tmp=null;
@@ -435,58 +454,74 @@ namespace RIFDC
                 // перебираем по порядку поля, кот. надо присвоить
                 // Logger.log("Start reading line", "");
                 d = new Lib.UniversalDataKeeper(); //это строка
+                
+               // fn.dp($"reading id {reader["id"]}");
 
                 t.fieldsInfo.fields.Where(x =>
                     (x.parameterSignificanceInfo.significanceType == Lib.ParameterSignificanceInfo.ParameterSignificanceTypeEnum.Solid ||
                     x.parameterSignificanceInfo.significanceType == Lib.ParameterSignificanceInfo.ParameterSignificanceTypeEnum.OuterDependable))
                     .ToList()
-                    .ForEach(f => { 
+                    .ForEach(f => {
+                        try
+                        {
 
-                            try
+                            if (f.fieldDbName == "lastModifiedDateTime")
                             {
-                                    int index = reader.GetOrdinal(f.fieldDbName);
-                                    if (!reader.IsDBNull(index))
-                                    {
-                                        if (f.fieldType == Lib.FieldTypeEnum.DateTime || f.fieldType == Lib.FieldTypeEnum.Date || f.fieldType == Lib.FieldTypeEnum.Time)
-                                        {
-                                            mySQLDateTime = reader.GetMySqlDateTime(f.fieldDbName);
-                                            tmp = Convert.ToDateTime(mySQLDateTime);
-
-                                          //  dateStr = fn.toStringNullConvertion(mySQLDateTime.GetDateTime());
-
-                                            /*
-                                                    if (mySQLDateTime.Day > 0)
-                                                    {
-                                                        dateTime = mySQLDateTime.GetDateTime();
-                                                    }
-                                                    else
-                                                    {
-
-                                                    }
-                                                */
-                                                /*
-                                          dateConvertRezult = DateTime.TryParseExact(dateStr,
-                                                  "MM.dd.yyyy hh:mm:ss", CultureInfo.InvariantCulture,
-                                                  DateTimeStyles.None, out dt);
-                                                    if (dateConvertRezult) tmp = dt; else tmp = null;
-                                                    */
-
-                                        }
-                                        else
-                                        {
-                                            tmp = reader[f.fieldDbName];
-                                        }
-                                    }
-                                    else
-                                    {
-                                        tmp = null;
-                                    }
-                                        /*
-                                        datConvertRezult= DateTime.TryParseExact(fn.toStringNullConvertion(reader.GetMySqlDateTime(f.fieldDbName)), 
-                                                            "MM.dd.yyyy hh:mm:ss", CultureInfo.InvariantCulture,
-                                                            DateTimeStyles.None, out dt); */
+                              //  fn.dp("0");
                             }
-                            catch (Exception e)
+
+
+                            //fn.dp($"reading field {f.fieldDbName}");
+
+                            int index = reader.GetOrdinal(f.fieldDbName);
+                           // fn.dp("1");
+
+
+
+                            if (f.fieldType == Lib.FieldTypeEnum.DateTime || f.fieldType == Lib.FieldTypeEnum.Date || f.fieldType == Lib.FieldTypeEnum.Time)
+                            {
+                                //fn.dp("2");
+                                if (!reader.IsDBNull(index))
+                                {
+                                    msdt = reader.GetMySqlDateTime(f.fieldDbName);
+                                  //  fn.dp("2.1");
+
+                                    dateConvertRezult = DateTime.TryParseExact($"{msdt.Day}.{msdt.Month}.{msdt.Year} {msdt.Hour}:{msdt.Minute}:{msdt.Second}",
+                                                                                   "dd.MM.yyyy hh:mm:ss", CultureInfo.InvariantCulture,
+                                                                                    DateTimeStyles.None, out dt);
+                                    //fn.dp("2.2");
+                                    tmp = dt;
+                                }
+                                else
+                                {
+                                    tmp = null;
+                                }
+                            }
+                            else
+                            {
+                               // fn.dp("3");
+                                if (!reader.IsDBNull(index))
+                                {
+                                 //   fn.dp("4");
+                                    tmp = reader[f.fieldDbName];
+                                }
+                                else
+                                {
+                                   // fn.dp("5");
+                                    tmp = null;
+                                }
+                            }
+                        }
+
+                            /*
+                             * * DBNull.Value.Equals(reader[fieldName])
+                             * 
+                                datConvertRezult= DateTime.TryParseExact(fn.toStringNullConvertion(reader.GetMySqlDateTime(f.fieldDbName)), 
+                                                    "MM.dd.yyyy hh:mm:ss", CultureInfo.InvariantCulture,
+                                                    DateTimeStyles.None, out dt); 
+
+                            */
+                        catch (Exception e)
                             {
                                 tmp = null;
                                 Logger.log("DB-ERROR", e.Message.ToString());
@@ -1060,7 +1095,7 @@ namespace RIFDC
                     if (!fIsNull)
                     {
                         nullTxt = f.nullabilityInfo.allowNull ? "NULL" : "NOT NULL";
-                        defaultTxt = f.nullabilityInfo.defaultValue == null ? "" : "DEFAULT " + valueForDbWithQuotes(f, f.nullabilityInfo.defaultValue);
+                        defaultTxt = fn.toStringNullConvertion(f.nullabilityInfo.defaultValue) == "" ? "" : "DEFAULT " + valueForDbWithQuotes(f, f.nullabilityInfo.defaultValue);
                     }
 
                     if (fIsNull && tagIsEmpty) { tag = " TEXT NULL"; } //ну то есть если нет филдинфо и тега, то это будет просто текстовое поле
@@ -1076,7 +1111,7 @@ namespace RIFDC
                         switch (f.fieldType)
                         {
                             case Lib.FieldTypeEnum.String:
-                                alterTableQuery += string.Format(" TEXT {0} {1}", nullTxt, defaultTxt);
+                                alterTableQuery += string.Format(" TEXT {0} ", nullTxt, defaultTxt);
                                 break;
 
                             case Lib.FieldTypeEnum.Int:

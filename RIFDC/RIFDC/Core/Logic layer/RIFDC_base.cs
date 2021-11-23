@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using RICOMPANY.CommonFunctions;
+using CommonFunctions;
 using RIFDC;
 using System.Collections;
 using System.Text.RegularExpressions;
@@ -78,6 +78,20 @@ namespace RIFDC
             setMyParameter("createdByUserId", RIFDC_App.currentUserId);
         }
 
+        public virtual IKeeper getMyIkeeper()
+        {
+            return null;
+        }
+
+        public virtual bool isTreeViewBased
+        {
+            //является ли объект деревом. Если да, то в наследнике необходимо перегрузить со значением true
+            get
+            {
+                return false;
+            }
+        }
+
         public void setDefaultValues(bool forNonNullableOnly = true)
         {
             //выставляет для параметров объекта значения по умолчанию
@@ -91,7 +105,12 @@ namespace RIFDC
         }
 
         public string id { get; set; }
+
+        public virtual string displayNameLong { get { return ""; } }
+
         public string parentId { get; set; } //id parent-объекта, т.е. объекта того же типа, но того, который выше по дереву
+
+        public int level { get; set; } = 0; //уровень в иерархии
 
         public DateTime createdDateTime;
 
@@ -101,17 +120,8 @@ namespace RIFDC
 
         public IDataRoom dataRoom { get; set; }
 
-        /*public string className
-         {
-             get
-             {
-                 string s = this.GetType().Name;
-                 return s;
-             }
-         }*/
-
         public virtual Lib.KeepableClassStructureTypeEnum structureType { get; }
-
+        
         public object holderObject;
 
         //порядок среди аналогичных элементов. Если холдер линейный, то внутри всего множества, если древовидный - внутри конкретного родителя
@@ -291,14 +301,14 @@ namespace RIFDC
 
             // надо как-то узнать, является ли поле геттером, т.к. если это геттер, то знак nullabilityInfo.isNull не был сброшен
             bool isGetter = ObjectParameters.isItOnlyGetter(this, fieldClassName);
-            if (isNull && isGetter) isNull = false; // геттер не может быть null
 
+            if (isNull && isGetter) isNull = false; // геттер не может быть null
 
             object defaultValue = f.nullabilityInfo.defaultValue;
 
             if (nullable & isNull) return null;
 
-            object value = ObjectParameters.getObjectParameterByName(this, fieldClassName).value;
+            object value = ObjectParameters.getObjectParameterByName(this, fieldClassName)?.value;
 
             if (nullable & (!isNull)) return value;
 
@@ -410,20 +420,30 @@ namespace RIFDC
         public virtual bool storeSerialized { get; }
 
         //объект, из которго создан данный. напр, для связки Project=> ProjectPages=> Page, для объекта Page  parentObject-ом будет Project
+
         //public KeepableClass parentObject { get; set; }
 
         //это не надо, тк. достается по groupObject
 
-
         private void setNullability()
         {
             //отработать nullability и присвоить значения по умолчанию где нужно
+
             foreach (Lib.FieldInfo f in this.fieldsInfo.fields)
             {
+               // fn.dp(f.fieldClassName);
+
                 if (f.nullabilityInfo.allowNull)
                 {
                     //если указано значение по умолчанию, то присвоить его, если нет - просто занулить и все
-                    if (f.nullabilityInfo.defaultValue == null) f.nullabilityInfo.considerNull = true; else setMyParameter(f.fieldClassName, f.nullabilityInfo.defaultValue);
+                    if (f.nullabilityInfo.defaultValue == null)
+                    {
+                        f.nullabilityInfo.considerNull = true;
+                    }
+                    else
+                    {
+                        setMyParameter(f.fieldClassName, f.nullabilityInfo.defaultValue);
+                    }
                 }
                 else
                 {
@@ -468,6 +488,14 @@ namespace RIFDC
             return Lib.getObjectStr(this);
         }
 
+        private bool valueEqualsDefaultValue (Lib.FieldInfo f)
+        {
+            object val1 = getMyParameter(f.fieldClassName); ;
+            object val2 = f.nullabilityInfo.defaultValue;
+            bool equal = Lib.RIFDCObjectsEqual(val1, val2, f.fieldType);
+            return equal;
+        }
+
         public bool isDataPresenceValid
         {
             get
@@ -483,7 +511,8 @@ namespace RIFDC
                         try
                         {
                             if (f.nullabilityInfo.allowNull && f.nullabilityInfo.considerNull) { valid = false; }
-                        //    fn.dp(String.Format("f.name={0}, allowNull={1}, isNull={2}", f.fieldClassName, f.nullabilityInfo.allowNull, f.nullabilityInfo.isNull));
+                          //  if ((!f.nullabilityInfo.allowNull) && valueEqualsDefaultValue(f)) { valid = false; }
+                            //    fn.dp(String.Format("f.name={0}, allowNull={1}, isNull={2}", f.fieldClassName, f.nullabilityInfo.allowNull, f.nullabilityInfo.isNull));
 
                         }
                         catch (Exception e)
@@ -513,6 +542,7 @@ namespace RIFDC
             f.entityName = entityName;
             Lib.FieldInfo x;
 
+
             if (f.allowId)
             {
                 x = f.addFieldInfoObject("id", "id", Lib.FieldTypeEnum.String); x.isPrimaryKey = true; // 27.03.2021  все, Id теперь строковый
@@ -532,7 +562,11 @@ namespace RIFDC
             {
                 f.addFieldInfoObject("createdByUserId", "createdByUserId", Lib.FieldTypeEnum.String);
             }
-
+            if (isTreeViewBased)
+            {
+                f.addFieldInfoObject("parentId", "parentId", Lib.FieldTypeEnum.String);
+                f.addFieldInfoObject("level", "level", Lib.FieldTypeEnum.Int);
+            }
             x = f.addFieldInfoObject("searchable", "", Lib.FieldTypeEnum.String);
             x.parameterSignificanceInfo.significanceType = Lib.ParameterSignificanceInfo.ParameterSignificanceTypeEnum.LocallyCountableGetter;
 
@@ -545,13 +579,6 @@ namespace RIFDC
             return f;
         }
 
-        //сохранение истори
-
-
-        public class MyControlFormats
-        {
-
-        }
 
         public Lib.Filter getIncomingFilterFromInterFormMessage(Lib.InterFormMessage msg)
         {
@@ -615,12 +642,18 @@ namespace RIFDC
                 return fieldsInfo.historySavingAlloyed;
             }
         }
+
+        public virtual string getMyStringRepresentation()
+        {
+            return "";
+        }
+
     }
 
     public partial class ItemKeeper<T> : IKeeper where T : IKeepable, new()
     {
         //это класс, хранящий список объектов Т и поддерживающий их CRUD
-        ItemKeeper(IDataRoom _dataRoom = null)
+        ItemKeeper(IDataRoom _dataRoom = null, bool drop = false)
         {
             //  if (_dataRoom == null) { fn.dp("ERROR: ItemKeeper creation requires dataRoom object"); return; }
             //Можно ли создавать IK без DR ?
@@ -629,19 +662,43 @@ namespace RIFDC
             sort = items0;
             currentRecord = new CurrentRecord(this);
             dataRoom = _dataRoom;
+
             if (!memoryOnlyMode)
             {
-                // 27.03.2021 новая система id, теперь каждый старт ItemKeeper сопровождается чтением таблицы из БД и получением dbprefix
-                Lib.DbOperationResult rte = checkMyTable();
-                if (!rte.success) return;
+                // 27.03.2021 новая система id, теперь каждый старт ItemKeeper сопровождается проверкой таблицы
+                Lib.DbOperationResult rte = checkMyTable(drop);
+                if (!rte.success)
+                {
+                    myStatusIsOk = false;
+                }
             }
 
         }
-        public static ItemKeeper<T> getInstance(IDataRoom _dataRoom = null)
+
+        public bool myStatusIsOk = true;
+
+        public static ItemKeeper<T> getInstance(IDataRoom _dataRoom = null, bool drop=false)
         {
-            ItemKeeper<T> x = new ItemKeeper<T>(_dataRoom);
+            ItemKeeper<T> x = new ItemKeeper<T>(_dataRoom, drop);
             return x;
         }
+
+        Random rnd = new Random();
+
+        public IKeepable GetRandomObject()
+        {
+            int cnt = actualItemList.Count;
+
+            if (cnt == 0) return null;
+
+            
+
+            int _rnd = rnd.Next(0, cnt);
+
+            return actualItemList[_rnd];
+
+        }
+        public bool isTreeViewBased { get { return sampleObject.isTreeViewBased; } }
 
         public bool readingItemsFlag = false;
 
@@ -688,7 +745,7 @@ namespace RIFDC
 
             return null;
         }
-        public Lib.DbOperationResult checkMyTable()
+        public Lib.DbOperationResult checkMyTable(bool drop=false)
         {
             //создает таблицу переданного класса T
             //проверяем, есть ли там tableName  в базе
@@ -698,7 +755,7 @@ namespace RIFDC
             }
             else
             {
-                return dataRoom.checkObjectTable(sampleObject);
+                return dataRoom.checkObjectTable(sampleObject, drop);
             }
         }
 
@@ -747,13 +804,7 @@ namespace RIFDC
         public Lib.ObjectOperationResult deleteItem(IKeepable t, bool silent=false)
         {
 
-
-            // TODO стоп, а если там цепочка удалений?
-            // логика удаления хранится в объекте, или в групповом объекте? ну если там несколько удалений
-            // видимо, в групповом объекте. объект хранит только как удалить оттуда "себя лично"
-
             // TODO onlySetDeletionMark - это пометка на удаление, функциональность пока не реализована
-
             // TODO дублирование кода
 
             if (memoryOnlyMode)
@@ -766,7 +817,7 @@ namespace RIFDC
                 Lib.ObjectOperationResult _rez = canDeleteItem(t);
                 if (!_rez.success)
                 {
-                    if(!silent) ServiceFucntions.mb_info(_rez.msg);
+                    //if(!silent) fn.mb_info(_rez.msg);
                     return Lib.ObjectOperationResult.sayNo(_rez.msg);
                 }
 
@@ -784,9 +835,44 @@ namespace RIFDC
             }
         }
 
+        public List<Lib.ObjectOperationResult> deleteMultipleItems(List<IKeepable> tl, bool silent = false)
+        {
+            // удалить несколько элементов
+
+            List<Lib.ObjectOperationResult> rez = new List<Lib.ObjectOperationResult>();
+
+            foreach (IKeepable x in tl)
+            {
+                rez.Add(deleteItem(x, silent));
+            }
+
+            return rez;
+
+        }
+
         public Lib.ObjectOperationResult canDeleteItem(IKeepable t)
         {
             //здесь определяем, можно ли удалить данный объект
+
+            //если это дерево, то там не дожлжно быть потомков
+            if(isTreeViewBased)
+            {
+                IKeeper tmpKeeper = sampleObject.getMyIkeeper();
+                tmpKeeper.dataRoom = RIFDC_App.mainDataRoom;
+                Lib.Filter tmpFilter = new Lib.Filter();
+                tmpFilter.addNewFilteringRule(t.fieldsInfo.getFieldInfoObjectByFieldClassName("parentId"), Lib.RIFDC_DataCompareOperatorEnum.equal, t.id, Lib.Filter.FilteringRuleTypeEnum.NotSpecified);
+                tmpKeeper.filtration.applyGlobalFilter(tmpFilter);
+                tmpKeeper.readItems();
+                if (tmpKeeper.count > 0)
+                {
+                    tmpKeeper = null;
+                    GC.Collect();
+                    return Lib.ObjectOperationResult.sayNo("Невозможно удалить элемент, т.к. у него есть дочерние элементы");
+                }
+                tmpKeeper = null;
+                tmpFilter = null;
+                GC.Collect();
+            }
 
             // перебрать все связи объекта, где его присутствие обязательно, т.е. свзяи obligatory
             // посмотреть, еслть ли по этим связям зависимые сцщности
@@ -945,11 +1031,11 @@ namespace RIFDC
 
             if (udc==null)
             {
-                
                 return;
-                
             }
+
             object _tmp;
+
             foreach (Lib.UniversalDataKeeper d in udc)
             {
                 //перебираем по порядку поля, кот. надо присвоить
@@ -963,7 +1049,6 @@ namespace RIFDC
                 //теперь присвоить холдер, т.е. присваиваем создаваемому объекту ссылку на этот класс
                 ObjectParameters.setObjectParameter(newObject, "holderObject", this);
 
-
                 // если там нет id, сделать его
                 if (fn.toStringNullConvertion(newObject.id) == "") newObject.setMyParameter("id", newObject.generateMyId() + "-tmp");
 
@@ -974,15 +1059,55 @@ namespace RIFDC
                     {
                         newObject.saveMyPhoto();
                         addExistingObject(newObject);
-
                     }
                     catch (Exception e)
                     {
-                        fn.dp("Point 1 " + e.Message);
+                       // fn.dp("Point 1 " + e.Message);
                     }
                 }
             }
             readingItemsFlag = false;
+        }
+
+        public void arrangeTreeLevels()
+        {
+            //пересчитать levels для всего дерева 
+            //просто берем тех, кто parent="" и перебираем их
+            //затратная процедура
+            if (!isTreeViewBased) return;
+            actualItemList.Where(x => fn.toStringNullConvertion(x.parentId) == "")
+                          .ToList()
+                          .ForEach(y=> {
+                              calculateTreelevels4Element(y);
+                          });
+        }
+
+        private void calculateTreelevels4Element (IKeepable element)
+        {
+            //вычисляем level передаваемого элемента и всех потомков
+            //считаем, что level родителя достоверен
+            if (!isTreeViewBased) return;
+
+            //берем родителя
+
+            IKeepable myParent = actualItemList.Where(x => x.id == element.parentId).FirstOrDefault();
+
+            if (myParent == null)
+            { 
+                element.setMyParameter("level", 0);
+            }
+            else
+            {
+                element.setMyParameter("level", myParent.level + 1);
+            }
+
+            saveItem(element);
+
+            actualItemList.Where(x => x.parentId == element.id).ToList().ForEach(y => {
+
+                calculateTreelevels4Element(y);
+
+            });
         }
 
         public string entityType
@@ -995,10 +1120,10 @@ namespace RIFDC
         public void simpleObjectDump()
         {
             //простой листинг items в консоль
-            fn.dp("This is dump of IKeeper: "+ entityType);
-            foreach (T t in actualItemList)
+            //fn.dp("This is dump of IKeeper: "+ entityType);
+            foreach (IKeepable t in actualItemList)
             {
-                Console.WriteLine(t.objectDump());
+                Logger.log(t.getMyStringRepresentation());
             }
         }
 
@@ -1271,6 +1396,8 @@ namespace RIFDC
             private Lib.Filter alterFilter(Lib.Filter filterBig,  Lib.Filter filterSmall)
             {
                 //модифицирует первый фильтр вторым
+                if (filterSmall == null) return filterBig;
+
                 if (filterBig != null)
                 {
                     if(filterSmall.filteringRuleList.Count>0)

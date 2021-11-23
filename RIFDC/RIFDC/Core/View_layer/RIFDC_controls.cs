@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using RICOMPANY.CommonFunctions;
+using CommonFunctions;
 using RIFDC;
 using System.Drawing;
 
@@ -85,11 +85,18 @@ namespace RIFDC
         void fillMe();
         object getValue();
         void selectAll();
+        bool isMultiSelectRepresentable { get; set; }
 
         Lib.LinePaintingRuleHolder paint { get; set; }
 
         void selectNone();
         void addEventHandlers();
+        void expandAll();
+
+        void collapseAll();
+
+        Lib.Filter internalFilter { get; set; }
+
     }
 
     #region //основные классы
@@ -326,7 +333,8 @@ namespace RIFDC
                                     Control c, 
                                     IKeeper _dataSource, 
                                     Lib.IControlFormat myFormat = null, 
-                                    DataGridEditabilityMode _editabilityMode = DataGridEditabilityMode.NotEditableAtAll) : base(c, _dataSource)
+                                    DataGridEditabilityMode _editabilityMode = DataGridEditabilityMode.NotEditableAtAll,
+          bool _isMultiSelectRepresentable=false ) : base(c, _dataSource)
         {
             dgr = (DataGridView)targetControl;
 
@@ -338,6 +346,7 @@ namespace RIFDC
                 }
             }
             editabilityMode = _editabilityMode;
+            isMultiSelectRepresentable = _isMultiSelectRepresentable;
 
             //форматирование грида
 
@@ -352,6 +361,18 @@ namespace RIFDC
 
         }
 
+        public Lib.Filter internalFilter { get; set; } = null;
+        //public string myRIFDCType { get { return "RIFDC_DataGridView"; } }
+        public bool isMultiSelectRepresentable { get; set; } = false;
+        public void expandAll()
+        {
+
+        }
+
+        public void collapseAll()
+        {
+
+        }
         public string ctrlTypeName { get { return "System.Windows.Forms.DataGridView"; } }
 
         DataGridView dgr;
@@ -865,15 +886,196 @@ namespace RIFDC
 
     }
 
-    public class RIFDC_FieldInfoComboBox
+    public class RIFDC_TreeView : MappedGridBasedControl, IGridBasedControl
     {
-        //комбобокс, специально созданный для обращения с объектами fieldInfo
+
+        DataGridEditabilityMode editabilityMode = DataGridEditabilityMode.NotEditableAtAll;
+        public RIFDC_TreeView(
+                                    Control c,
+                                    IKeeper _dataSource,
+                                    Lib.IControlFormat myFormat = null,
+                                    DataGridEditabilityMode _editabilityMode = DataGridEditabilityMode.NotEditableAtAll) : base(c, _dataSource)
+        {
+            tvr = (TreeView)targetControl;
+            
+/*
+            if (myFormat != null)
+            {
+                foreach (Lib.IControlFormatLine line in myFormat.lines)
+                {
+                    addDataColumn(line.fieldClassName, line.colWidth, line.caption);
+                }
+            }
+            */
+
+            editabilityMode = _editabilityMode;
+
+            //dgr.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
 
+        }
+
+        public string ctrlTypeName { get { return "System.Windows.Forms.TreeView"; } }
+        //public string myRIFDCType { get { return "RIFDC_TreeView"; } }
+        public bool isMultiSelectRepresentable { get; set; } = false;
+        TreeView tvr;
+
+        bool _multiSelectMode = false;
+        public void setCurrentId(string id)
+        {
+            /*
+             * if (id == null) return;
+            DataGridViewRow dgrow = getDataGridViewRowById(id.ToString());
+            if (dgrow != null) dgrow.Selected = true;
+            */
+        }
+
+        public List<string> selectedItemsIds
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public Lib.Filter internalFilter { get; set; } = null;
+        public Lib.LinePaintingRuleHolder paint { get; set; } = null;
+        public bool multiSelectMode { get; set; }
+
+        public void setValue(object value)
+        {
+
+        }
+        public object getValue()
+        {
+            TreeNode _tvrn = tvr.SelectedNode;
+            if (_tvrn == null) return "";
+            return _tvrn.Name;
+        }
+
+        public void setCurrentIndex(int index)
+        {
+/*            if (dgr.Rows.Count > 0 && (dgr.Rows.Count > index))
+            {
+                dgr.ClearSelection();
+                dgr.Rows[index].Selected = true;
+            }*/
+        }
+
+        public void reReadItem(IKeepable t)
+        {
+            //надо найти node с таким id и поменять называние
+            TreeNode _tvrn = null;
+            TreeNode[] _tvrns = tvr.Nodes.Find(t.id, true);
+            if (_tvrns.Length > 0) _tvrn = _tvrns[0];
+
+            if (_tvrn != null) _tvrn.Text = t.displayName;
+
+        }
+
+        private void processTreeViewNode(TreeNode node, IKeeper dataSource)
+        {
+            TreeNode _node = null;
+            data.dataSource.actualItemList.Where(x => fn.toStringNullConvertion(x.parentId) == node.Name)
+                                          .ToList()
+                                          .ForEach(y => {
+                                             _node= node.Nodes.Add(y.id, y.displayName);
+                                              processTreeViewNode(_node, dataSource);
+                                          });
+        }
+
+        public override void fillMe()
+        {
+            //тут надо зелить TreeView
+            //? а какие поля там отображать? DIsplayName?
+            // ну то есть такая иедология что displayName - в treeView, остальное - в record-based полях
+
+            tvr.Nodes.Clear();
+
+            //сначала выбираем все без предков и добавляем их
+            // а там есть такие, что с предками, но эти предки не попали в фильтр
+            //значит, надо изменить понятие "без предков"
+            //и как это сделать? 
+            //видимо, без предков - это те, кто не имеет предков в данном множестве
+            //кгм. это для каждого элемента надо проверять, есть ли его родитель в этом дереве
+
+
+            // надо взять parent каждого, и проверить, еслть ли он вообще в этом списке
+
+            data.dataSource.actualItemList.Where(x => fn.toStringNullConvertion(x.parentId) == "")
+                                          .ToList()
+                                          .ForEach(y=> {
+                                              tvr.Nodes.Add(y.id, y.displayName);
+                                            });
+
+            
+            //теперь надо из них вытащить те, у которых parentId нет в списке id
+            var zeroLevelUnitsWithParentIds = data.dataSource.actualItemList.Where(x => fn.toStringNullConvertion(x.parentId) != "").ToList();
+            
+            zeroLevelUnitsWithParentIds.ForEach(x=> {
+
+                int cnt = zeroLevelUnitsWithParentIds.Where(y=>y.id==x.parentId).Count();
+                if (cnt>0)
+                {
+                    tvr.Nodes.Add(x.id, x.displayName);
+                }
+            });
+
+            // а если найденное где-то внутри дерева , 
+            // если фильтр отсекает часть дререва?
+
+            //далее для каждого узла делаем рекурсивный drilldown
+            List<TreeNode> zeroLevelNodesList = new List<TreeNode>();
+
+            foreach (TreeNode tvn in tvr.Nodes)
+            {
+                zeroLevelNodesList.Add(tvn);
+            }
+
+            zeroLevelNodesList.ForEach(x => processTreeViewNode(x, data.dataSource));
+
+            //сколько уровней показывать + комбо уровней levels2show
+
+            tvr.ExpandAll();
+
+        }
+
+
+        public override void addEventHandlers()
+        {
+            //беерм eventHandlers_GridBC и обвешиваем нужные события
+            //dgr.SelectionChanged += eventHandlers_GridBC.dataGridView_SelectionChanged_Processor;
+            //dgr.ColumnHeaderMouseClick += Dgr_ColumnHeaderMouseClick;
+            tvr.AfterSelect += eventHandlers_GridBC.treeView_SelectionChanged_Processor;
+
+        }
+
+        public event Lib.Sorter.ImSorted_EventHandler ImSorted;
+
+        public void selectAll()
+        {
+            
+        }
+
+        public void selectNone()
+        {
+            
+        }
+
+        public void expandAll()
+        {
+            tvr.ExpandAll();
+        }
+
+        public void collapseAll()
+        {
+            tvr.CollapseAll();
+        }
     }
 
-    
-    
+
+
+
     #endregion
 
     // public delegate void CommonCtrlEventHandler(object sender, EventArgs e);
@@ -1082,6 +1284,7 @@ namespace RIFDC
     public class EventHandlerCollection_GridBasedControl
     {
         //пакет ивентхендлеров, который крудманагер передает контролу
+        public TreeViewEventHandler treeView_SelectionChanged_Processor;
         public EventHandler dataGridView_SelectionChanged_Processor;
         public EventHandler listView_SelectionChanged_Processor;
     }
@@ -1194,7 +1397,6 @@ namespace RIFDC
 
             Lib.FieldInfo f = parent.dataSource.sampleObject.fieldsInfo.getFieldInfoObjectByFieldClassName("searchable");
 
-
             s.ToList().ForEach(piece => {
                     filter.addNewFilteringRule( f, Lib.RIFDC_DataCompareOperatorEnum.contains, piece, Lib.Filter.FilteringRuleTypeEnum.SearchFilteringRule);
             });
@@ -1282,7 +1484,14 @@ namespace RIFDC
         btnSelectAll = 41,
         btnSelectNone = 42,
 
+
+        
         btnOpenGroupOperationsForm = 43,
+        
+        btnTreeViewAddRootElement = 50,
+        btnTreeViewExpandAll = 51,
+        btnTreeViewCollapseAll = 52,
+       // btnTreeViewCollapseAll = 52,
 
         btnTestA = 90,
         btnTestB = 91

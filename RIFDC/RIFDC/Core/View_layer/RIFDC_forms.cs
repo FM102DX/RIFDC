@@ -1,9 +1,10 @@
-﻿using RICOMPANY.CommonFunctions;
+﻿using CommonFunctions;
 using ObjectParameterEngine;
 using StateMachineNamespace;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace RIFDC
 {
@@ -76,8 +77,21 @@ namespace RIFDC
 
         //public delegate void DFCEventProcessingDelegate();
         
-        public event actionDelegate FormRefilled;
+        //public event actionDelegate FormRefilled;
+
+        public event Action FormRefilled;
+
         public string tag="";
+
+        public int treeLevelsToShow = -1;  //сколько уровней дерева показывать, если dfc древовидный
+
+        public bool isTreeViewBased
+        {
+            get
+            {
+                return dataSource.isTreeViewBased;
+            }
+        }
 
         public IKeeper dataSource { get; set; }
 
@@ -87,6 +101,7 @@ namespace RIFDC
             get;
             set;
         } = null;
+
         public Lib.LinePaintingRuleHolder paint = new Lib.LinePaintingRuleHolder();
 
         MappedExternalCrudMatrixCollection externalCrudMatrixCollection;
@@ -416,6 +431,7 @@ namespace RIFDC
         public void fillTheForm()
         {
             crudOperator.fillTheForm();
+            FormRefilled?.Invoke(); 
         }
 
         public void openMyHistoryFrm()
@@ -441,7 +457,7 @@ namespace RIFDC
 
             if (selectedItemsIds.Count==0 && this.multiSelectionMode==true)
             {
-                ServiceFucntions.mb_info("Элементы не выбраны");
+                fn.mb_info("Элементы не выбраны");
                 return;
             }
 
@@ -488,7 +504,7 @@ namespace RIFDC
             void processFormEvent(FormEventTypeEnum formEventType, object sender = null, EventArgs e = null, KeyEventArgs ke = null);
             void raiseFormEvent(FormEventTypeEnum formEventType, object sender = null, EventArgs e = null, KeyEventArgs ke = null);
             void setCtrlFirstLastVisibility();
-            Lib.EventProcessigResult addNewRecord();
+            Lib.EventProcessigResult addNewRecord(bool addRootElement= false);
             Lib.EventProcessigResult saveRecord(Control c);
             void doCancelEdit();
 
@@ -498,6 +514,9 @@ namespace RIFDC
             void addCommonEventHandlers();
 
             void prepareStateActions(); //забить туда контролы, которые будут показываться / скрываться в зависимости от состояния формы
+
+            void expandAll();
+            void collapseAll();
 
         }
 
@@ -522,6 +541,8 @@ namespace RIFDC
                 eventHandlers_RecordBC.ComboBox_SelectedIndexChanged_Processor = EventHandler_Fly_ComboBoxChange;
 
                 eventHandlers_GridBC.dataGridView_SelectionChanged_Processor = EventHandler_dg_SelectionChanged;
+
+                eventHandlers_GridBC.treeView_SelectionChanged_Processor = EventHandler_TreeView_SelectionChanged;
 
                 addCommonEventHandlers();
                 prepareStateActions();
@@ -560,7 +581,19 @@ namespace RIFDC
                 }
 
             }
+            private void EventHandler_TreeView_SelectionChanged(object sender, EventArgs e)
+            {
+                TreeView _tvr = (TreeView)sender;
 
+                if (!parent.fillViewControlFlag)
+                {           //TODO да, это надо куда-то спрятать
+                    if (_tvr.Nodes.Count > 0)
+                    {
+                        parent.crudOperator.raiseFormEvent(FormEventTypeEnum.currentRecordChangeAttempt, _tvr);
+                    }
+                }
+
+            }
 
             public void EventHandler_Fly_CheckBoxCheck(object sender, EventArgs e)
             {
@@ -583,16 +616,20 @@ namespace RIFDC
 
             public void controlSimpleChange(object sender, EventArgs e)
             {
+                
                 if (parent.fillEditControlsFlag) { return; }
 
                 //raiseFormEvent(FormEventTypeEnum.comboBoxSelectionChanged, sender);
                 //если юзер что-то выбрал в комбобоксе
                 //TODO а как же leave-валидация в случае комбобоксов? ну по идее там нельзя выбрать что-то, что не в списке
+                
                 Control c = (Control)sender;
+
                 Lib.EventProcessigResult r0 = saveRecord(c);
+
                 if (!r0.success)
                 {
-                    ServiceFucntions.mb_info(r0.msg);
+                    fn.mb_info(r0.msg);
 
                     //теперь еще надо не дать уйти с поля
                     c.Focus();
@@ -611,6 +648,7 @@ namespace RIFDC
                 // а если он ушел, а там как было пустое поле так и оставлось -- это dirty -- 
 
                 bool leaveChk = Fly_ProcessTextBoxLeave(sender); //проверка на leave
+
                 if (!leaveChk) return;
 
                 MappedRecordBasedControls.MappedRecordBasedControl tbb = mappedRecordBasedControls.getControlMapping((Control)sender);
@@ -622,8 +660,7 @@ namespace RIFDC
 
                 if (!r.success)
                 {
-
-                    ServiceFucntions.mb_info(r.msg);
+                    fn.mb_info(r.msg);
                     tbb.targetControl.Focus(); //не дать уйти с поля
                     tbb.targetControl.selectionStart = fn.toStringNullConvertion(tbb.getTargetControlValue()).Length;
                 }
@@ -708,7 +745,7 @@ namespace RIFDC
                     {
                         //если leave валидация !success, возвращаем пользователя на поле, показываем сообщение
                         tb.Focus();
-                        ServiceFucntions.mb_info(vr.validationMsg);
+                        fn.mb_info(vr.validationMsg);
                     }
                     rez = vr.validationSuccess;
                 }
@@ -729,8 +766,16 @@ namespace RIFDC
                     {
                         if (multiSelectionMode)
                         {
-                            MappedGridBasedControls.MappedGridBasedControl mgc = mappedGridBasedControls.items[0];
-                            return mgc.targetControl.selectedItemsIds;
+                            MappedGridBasedControls.MappedGridBasedControl mgc = mappedGridBasedControls.getMultiSelectRepresentableControl();
+
+                            if (mgc != null)
+                            {
+                                return mgc.targetControl.selectedItemsIds;
+                            }
+                            else
+                            { 
+                                return new List<string>(); 
+                            }
                         }
                         else
                         {
@@ -745,7 +790,7 @@ namespace RIFDC
                     }
                     else
                     {
-                        return null;
+                        return new List<string>();
                     }
                     
                 }
@@ -875,22 +920,32 @@ namespace RIFDC
                 }
             }
 
-            public Lib.EventProcessigResult addNewRecord()
+            public Lib.EventProcessigResult addNewRecord(bool addRootElement=false)
             {
                 //добавление новой записи 
 
                 // в режиме fly новая запись создается сразу, со значениями по умолчанию
                 doCancelEdit();
 
-                //получаем новую запись со значениями по умолчанию
-                IKeepable t = parent.dataSource.createNewObject_notInserted();
+                if (!addRootElement && (parent.dataSource.count == 0)) return Lib.EventProcessigResult.sayNo("Нет родительского элемента"); 
+
+                IKeepable t = null;
+                IKeepable parentObject = null;
+
+                t = parent.dataSource.createNewObject_notInserted();
+
+                if (parent.isTreeViewBased)
+                {
+                    if (!addRootElement) parentObject = parent.dataSource.currentRecord.getMember();
+                    if (parentObject != null) t.setMyParameter("parentId", parentObject.id);
+                }
 
                 //Здесь ситуация ткова, что этот объект фильтруется многими входящими
                 //их надо все перебарть и в зависимые поля этого объекта поставить текущие значения матер - полей parent-объектов, которые были переданы через фильтр
 
-                // 1 получить все входящие зависимости этого объекта
-                // getMyDFCDependencies 
-                // предполагаем, что если оно фильтруется чем-то по зависимому полю, то это поле надо из фильтра заполнять
+                    // 1 получить все входящие зависимости этого объекта
+                    // getMyDFCDependencies 
+                    // предполагаем, что если оно фильтруется чем-то по зависимому полю, то это поле надо из фильтра заполнять
 
                 t.saveMyPhoto();
 
@@ -959,9 +1014,6 @@ namespace RIFDC
                     {
                         //установить этот параметр
                         //nullability учитывается в объекте
-
-
-
                         //текущее значение параметра в объекте, на случай, если придется возвращать все обратно
                         tmp0 = t.getMyParameter(m.srcDataFieldClassName); 
 
@@ -979,9 +1031,6 @@ namespace RIFDC
                             
                             return Lib.EventProcessigResult.sayNo("Введенное значение не подходит для данного поля! Ошибка: "+setParameterResult.msg);
                         }
-
-                        
-                       
 
                         //сохранение в базе в режиме "сохранять только те поля, что были изменены"
                         Lib.ObjectOperationResult or= parent.dataSource.saveItem(t);
@@ -1066,6 +1115,10 @@ namespace RIFDC
                                 addNewRecord();
                                 break;
 
+                            case FormBtnTypeEnum.btnTreeViewAddRootElement:
+                                addNewRecord(true);
+                                break;
+
                             case FormBtnTypeEnum.btnEdit: //это будет только в 2, где окно открывается; пока не делаем
 
                                 break;
@@ -1079,24 +1132,43 @@ namespace RIFDC
                                 //удалить запись
                                 bool b;
 
+                                List<string> processionIdList = parent.selectedItemsIds;
+
+                                b = fn.mb_confirmAction($"Будет удалено записей: {processionIdList.Count}. Продолжить?") ;
+
+                                if (!b) return;
+
+                                List<IKeepable> processionObjectList = new List<IKeepable>();
+
+                                processionIdList.ForEach(x => {
+
+                                        processionObjectList.Add(parent.dataSource.getItemById(x));
+
+                                });
+
+                                List<Lib.ObjectOperationResult> rez = parent.dataSource.deleteMultipleItems(processionObjectList);
+
+                                Lib.MultipleOperationHandler mult = new Lib.MultipleOperationHandler(rez);
+
+                                fn.mb_info(mult.rezultMsgText1);
+
+
+
+                                /*
                                 if (parent.multiSelectionMode)
                                 {
-                                    b = ServiceFucntions.mb_confirmAction("Удалить выделенные записи?");
-                                    
-                                    if (!b) return;
 
                                     //теперь надо взять и перебрать все выделенные 
                                     //наверное DFC.selectedItemIds - делать ID
                                     parent.selectedItemsIds.ForEach(x=> {
 
-                                        Lib.ObjectOperationResult or = parent.dataSource.deleteItem(parent.dataSource.getItemById(x), true);
+                                        
 
                                     });
                                 }
                                 else
                                 {
-
-                                    b = ServiceFucntions.mb_confirmAction("Удалить?");
+                                    b = fn.mb_confirmAction("Удалить?");
 
                                     if (!b) return;
 
@@ -1107,14 +1179,19 @@ namespace RIFDC
                                     if (or.success)
                                     {
                                         parent.fillTheForm();
+                                        //сохранить курсор в той же позиции в гриде после удаления
+                                        int count = parent.dataSource.count;
+                                        if (count < neededPosition) { neededPosition = count; }
+                                        parent.currentRecord.index = neededPosition - 1;
+
                                     }
-                                    //сохранить курсор в той же позиции в гриде после удаления
-                                    int count = parent.dataSource.count;
-                                    if (count < neededPosition) { neededPosition = count; }
-                                    parent.currentRecord.index = neededPosition - 1;
+                                    else
+                                    {
+                                        fn.mb_info($"Невозможно удалить элемент: {or.msg}");
+                                    }
                                 }
 
-
+                                */
 
                                 break;
 
@@ -1195,6 +1272,15 @@ namespace RIFDC
                                 parent.selectNone();
                                 break;
 
+                            case FormBtnTypeEnum.btnTreeViewExpandAll:
+                                parent.crudOperator.expandAll();
+                                break;
+                            case FormBtnTypeEnum.btnTreeViewCollapseAll:
+                                parent.crudOperator.collapseAll();
+                                break;
+
+
+
                         }
                         break;
 
@@ -1259,10 +1345,20 @@ namespace RIFDC
                 frmStateEdit = 2, // user редактирует поле
                 frmStateLockedNoRecords = 3 // нет записей, доступно только добавление
             }
+
+            public void expandAll()
+            {
+                mappedGridBasedControls.expandAll();
+            }
+            public void collapseAll()
+            {
+                mappedGridBasedControls.collapseAll();
+            }
+
         }
 
 
-        public class FormCrudOperator_GridOnly : CrudOperatorPattern //, iFormCrudOperator
+        public class FormCrudOperator_GridOnly : CrudOperatorPattern // iFormCrudOperator
         {
             public FormCrudOperator_GridOnly(DataFormComponent _parent) : base(_parent)
             {
@@ -1491,28 +1587,52 @@ namespace RIFDC
                                 break;
 
                             case FormBtnTypeEnum.btnDelete:
-
                                 //удалить запись
 
-                                bool b = ServiceFucntions.mb_confirmAction("Удалить?");
+                                List<IKeepable> targetItems = new List<IKeepable>();
 
-                                if (!b) return;
 
-                                int neededPosition = parent.currentRecord.index + 1;
 
-                                Lib.ObjectOperationResult or = parent.dataSource.deleteItem(parent.currentRecord.getMember());
-
-                                if (or.success)
+                                if (parent.isTreeViewBased)
                                 {
-                                    parent.fillTheForm();
+                                    //если это дерево, то нод может содаржать потомков
+                                    //если потомки есть удалять нельзя 
+                                    //взять маппед покнтрол, а из него 
+
                                 }
-                                //сохранить курсор в той же позиции в гриде после удаления
+                                else
 
-                                int count = parent.dataSource.count;
+                                {
+                                    
+                                    
 
-                                if (count < neededPosition) { neededPosition = count; }
+                                    bool b = fn.mb_confirmAction("Удалить элемент?");
 
-                                parent.currentRecord.index = neededPosition - 1;
+                                    if (!b) return;
+
+
+
+                                    int neededPosition = parent.currentRecord.index + 1;
+
+                                    Lib.ObjectOperationResult or = parent.dataSource.deleteItem(parent.currentRecord.getMember());
+
+                                    if (or.success)
+                                    {
+                                        parent.fillTheForm();
+                                    }
+                                    else
+                                    {
+                                        fn.mb_info($"Невозможно удалить элемент");
+                                    }
+                                    //сохранить курсор в той же позиции в гриде после удаления
+                                    int count = parent.dataSource.count;
+                                    if (count < neededPosition) { neededPosition = count; }
+                                    parent.currentRecord.index = neededPosition - 1;
+
+
+                                }
+
+
 
                                 break;
 
@@ -1585,8 +1705,6 @@ namespace RIFDC
             }
         }
 
-        
-
         public abstract class CrudOperatorPattern
         {
 
@@ -1638,7 +1756,25 @@ namespace RIFDC
                 //список контролов, где отображаются множества записей, напр, grid или treeview
 
                 public List<MappedGridBasedControl> items = new List<MappedGridBasedControl>();
+
                 public DataFormComponent parent;
+
+                public MappedGridBasedControl getMultiSelectRepresentableControl()
+                {
+                    if (items.Count == 1) return items[0];
+
+                    var _items = items.Where(x => x.targetControl.isMultiSelectRepresentable).ToList();
+
+                    if (_items?.Count > 0)
+                    { 
+                        return _items[0]; 
+                    }
+                    else
+                    { 
+                        return null; 
+                    }
+                       
+                }
 
                 private bool _multiSelectionMode;
 
@@ -1751,6 +1887,15 @@ namespace RIFDC
                     { 
                         m.targetControl.fillMe(); 
                     }
+                }
+
+                public void expandAll()
+                {
+                    items.ForEach(x => x.targetControl.expandAll());
+                }
+                public void collapseAll()
+                {
+                    items.ForEach(x => x.targetControl.collapseAll());
                 }
 
             }

@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using RICOMPANY.CommonFunctions;
+using CommonFunctions;
 using RIFDC;using System.Collections;
 using System.Text.RegularExpressions;
 using System.IO;
@@ -39,79 +39,7 @@ namespace RIFDC
 
     }
 
-    public static class Logger
-    {
-        public static string fileName = @"C:\Log\log.txt";
-        public static bool logIsOn = true;
-        public static logDirectionEnum logDirection = logDirectionEnum.toConsole;
-        public static void prepare()
-        {
 
-            FileInfo file = new FileInfo(fileName);
-            if (!file.Exists)
-            {
-                StreamWriter sw = file.CreateText();
-                sw.Close();
-            }
-            //            System.IO.File.Delete(fileName);
-
-            //string path = Path.GetTempFileName();
-
-
-
-
-
-        }
-
-        public static void writeToFile(string s)
-        {
-            string writePath = fileName;
-
-            try
-            {
-                using (StreamWriter sw = new StreamWriter(writePath, true, System.Text.Encoding.Default))
-                {
-                    sw.WriteLine(s);
-                    sw.Close();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-        }
-        public static void log(object domain, object text)
-        {
-            string s = Convert.ToString(domain).ToUpper() + "_" + fn.toStringNullConvertion(text);
-            if (logIsOn)
-            {
-                switch (logDirection)
-                {
-                    case logDirectionEnum.toFile:
-                        writeToFile(s);
-                        break;
-                    case logDirectionEnum.toConsole:
-                        fn.dp(s);
-                        break;
-                    case logDirectionEnum.bothToConAndFile:
-                        writeToFile(s);
-                        fn.dp(s);
-                        break;
-
-
-                }
-            }
-        }
-
-        public enum logDirectionEnum
-        {
-            toConsole = 1,
-            toFile = 2,
-            bothToConAndFile = 3
-
-        }
-    }
 
     public static class RTFSaver
     {

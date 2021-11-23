@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
-using RICOMPANY.CommonFunctions;
+using CommonFunctions;
 using RIFDC;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -187,7 +187,6 @@ namespace RIFDC
             Excel.Application excelPhysicalApp;
             try
             {
-                // excelPhysicalApp = (Microsoft.Office.Interop.Excel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
                 excelPhysicalApp = (Microsoft.Office.Interop.Excel.Application)Marshal2.GetActiveObject("Excel.Application");
             }
             catch
@@ -630,7 +629,7 @@ namespace RIFDC
                 else
                 {
                     _excelPhysicalAppCurrentInctance = new Excel.Application(); //открыть эксель
-                    excelApp = new ExcelApp(_excelPhysicalAppCurrentInctance);
+                    this.excelApp= new ExcelApp(_excelPhysicalAppCurrentInctance);
                 }
                // _excelPhysicalAppCurrentInctance.Visible = true;
                 _excelOpenedWorkBookCurrentInctance = _excelPhysicalAppCurrentInctance.Workbooks.Open(@"" + filePath + myWorkBookName);
@@ -678,18 +677,30 @@ namespace RIFDC
         //эксельный файл
         public string myWorkBookName;
         public string myWorkSheetName;
+
         public long dataRangeRowShift { get; }
         public string startAddress { get; }
         public string endAddress { get; }
 
-        
-        public ExcelApp excelApp;
+        public string tag { get; set; }
+
+        private ExcelApp _excelApp;
+        public ExcelApp excelApp 
+        { 
+            get { return _excelApp; } 
+            set { 
+                fn.dp($"Setting value{value}"); 
+                _excelApp = value; 
+            } 
+        }
+
         public string filePath { get; set; }
         public Excel.Workbook myWorkBook
         {
             get
             {
-                return excelApp.getOpenedWorkBookByName(myWorkBookName);
+                Excel.Workbook _wb = excelApp.getOpenedWorkBookByName(myWorkBookName);
+                return _wb;
             }
         }
 
@@ -697,7 +708,8 @@ namespace RIFDC
         {
             get
             {
-                return excelApp.getOpenedWorkSheetByName(myWorkBook, myWorkSheetName);
+                Excel.Worksheet _ws  = excelApp.getOpenedWorkSheetByName(myWorkBook, myWorkSheetName);
+                return _ws;
             }
         }
         public ExcelFile(string _filePath, string _myWorkBookName, string _myWorkSheetName, string _startAddress, string _endAddress, long _dataRangeRowShift, ExcelApp _excelApp = null)
@@ -746,8 +758,6 @@ namespace RIFDC
                 if (ws == null) return false; else return true;
             }
         }
-
-
 
     }
 

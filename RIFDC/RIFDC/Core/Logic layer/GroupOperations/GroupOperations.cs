@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using RICOMPANY.CommonFunctions;
+using CommonFunctions;
 
 namespace RIFDC
 {
@@ -22,6 +22,8 @@ namespace RIFDC
         DataFormComponent dfc;
         IKeeper keeper;
         bool fillEditControlsFlag;
+        Lib.FieldInfo currentlySelectedFieldInfo = null;
+        Control actualInputControl = null;
         private void frmMakeGroupOperation_Load(object sender, EventArgs e)
         {
 
@@ -89,7 +91,6 @@ namespace RIFDC
                                                 x.fieldType!= Lib.FieldTypeEnum.Time &&
                                                 x.fieldClassName.ToLower() !="id")
                                               .ToList();
-            
             doSelectWorkingField();
             fillEditControlsFlag = false;
         }
@@ -97,49 +98,62 @@ namespace RIFDC
         private void doSelectWorkingField()
         {
             //tbValue.Text = "";
-
             //Delegate[] delegAry = tbValue.TextChanged.GetInvocationList();
+             
+            if (actualInputControl != null)
+            {
+                grpOperationSetValue.Controls.Remove(actualInputControl);
+                actualInputControl.Dispose();
+            }
 
+            currentlySelectedFieldInfo = startMsg.targetKeeper.sampleObject.fieldsInfo.getFieldInfoObjectByFieldClassName(cbxSetValueParameter.SelectedValue.ToString());
+
+            //TODO тут надо создавать кипер без датарума
             keeper = RIFDC_App.iKeeperSampleHolder.getIKeeperByEntityType(startMsg.targetKeeper.sampleObject.entityName);
+            keeper.dataRoom = null;
             dfc = new DataFormComponent(keeper, this, Lib.FrmCrudModeEnum.GridAndFieldsOnTheFly);
             dfc.tag = "сардина-1";
-            RemoveEventHandlerOfType("TextChanged", tbValue);
-            RemoveEventHandlerOfType("Leave", tbValue);
 
-            dfc.addRecordBasedControlMapping(new RIFDC_TextBox(tbValue), fn.toStringNullConvertion(cbxSetValueParameter.SelectedValue));
+            if (currentlySelectedFieldInfo.isStringValue)
+            {
+                //теперь создаем контрол под выбранное филдинфо, и мапим его на DFC
+                TextBox newTb = new TextBox();
+                newTb.Location = new System.Drawing.Point(19, 83);
+                newTb.Size = new System.Drawing.Size(341, 120);
+                newTb.Multiline = true;
+                newTb.BackColor = Color.Green;
+                actualInputControl = newTb;
+                grpOperationSetValue.Controls.Add(newTb);
+                dfc.addRecordBasedControlMapping(new RIFDC_TextBox(newTb), fn.toStringNullConvertion(cbxSetValueParameter.SelectedValue));
+            }
+            
+            if (currentlySelectedFieldInfo.fieldType== Lib.FieldTypeEnum.Double || currentlySelectedFieldInfo.fieldType == Lib.FieldTypeEnum.Int)
+            {
+                //теперь создаем контрол под выбранное филдинфо, и мапим его на DFC
+                TextBox newTb = new TextBox();
+                newTb.Location = new System.Drawing.Point(19, 83);
+                newTb.Size = new System.Drawing.Size(341, 120);
+                newTb.Multiline = false;
+                newTb.BackColor = Color.Yellow;
+                actualInputControl = newTb;
+                grpOperationSetValue.Controls.Add(newTb);
+                dfc.addRecordBasedControlMapping(new RIFDC_TextBox(newTb), fn.toStringNullConvertion(cbxSetValueParameter.SelectedValue));
+            }
+
+            if (currentlySelectedFieldInfo.fieldType == Lib.FieldTypeEnum.Bool)
+            {
+                //теперь создаем контрол под выбранное филдинфо, и мапим его на DFC
+                CheckBox newCb = new CheckBox();
+                newCb.Location = new System.Drawing.Point(19, 83);
+                actualInputControl = newCb;
+                grpOperationSetValue.Controls.Add(newCb);
+                dfc.addRecordBasedControlMapping(new RIFDC_CheckBox(newCb), fn.toStringNullConvertion(cbxSetValueParameter.SelectedValue));
+            }
+
 
             keeper.clear();
             keeper.createNewObject_inserted();
             dfc.fillTheForm();
-            //keeper.currentRecord.index = 0;
-        }
-
-
-        private void RemoveEventHandlerOfType(string eventName, Control c)
-        {
-            var currentEvent = c.GetType().GetEvents().FirstOrDefault(ev => ev.Name == eventName);
-            var type = c.GetType();
-            if (currentEvent != null)
-            {
-                //это объект "event"
-
-                //FieldInfo[] eventFieldInfoArray =
-                //    tbValue.GetFields();
-
-                EventInfo[] x0 = tbValue.GetType().GetEvents();
-
-                FieldInfo eventFieldInfo = type.GetField(eventName,
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-
-                
-                if (eventFieldInfo==null)
-                {
-                    fn.dp("Event not found:  "+ eventName);
-                    return;
-                }
-                //это проде как его значение, т.е. делегат
-                eventFieldInfo.SetValue(c, null);
-            }
         }
 
 
@@ -168,41 +182,40 @@ namespace RIFDC
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ServiceFucntions.mb_info(string.Join(" ", items.Select(x => x.id).ToList()));
+            fn.mb_info(string.Join(" ", items.Select(x => x.id).ToList()));
         }
 
         private void cbxSetValueParameter_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
             if (fillEditControlsFlag) return;
             fillEditControlsFlag = true;
+            
             doSelectWorkingField();
+            
             fn.dp("selected field is "+ cbxSetValueParameter.SelectedValue.ToString());
             fillEditControlsFlag = false;
         }
 
         private void btnDoAction_Click(object sender, EventArgs e)
         {
-            //сначала валидация
-            //надо валидировать, но оно само, там обработчики событий
-
             List<string> success = new List<string>();
             List<string> errors = new List<string>();
 
             Lib.ObjectOperationResult or;
             Lib.ObjectOperationResult or1;
-
+            object newVal = dfc.dataSource.currentRecord.getMember().getMyParameter(selectedFieldInfo.fieldClassName);
             foreach (IKeepable x in items)
             {
                 try
                 {
-                    or = x.setMyParameter(selectedFieldInfo.fieldClassName, tbValue.Text);
+                    or = x.setMyParameter(selectedFieldInfo.fieldClassName, newVal);
                     if (or.success)
                     {
                         or1= startMsg.targetKeeper.saveItem(x);
                         if (or1.success)
                         {
                             success.Add(string.Format("id={0}: {1}", x.id, "success"));
-
                         }
                         else
                         {
@@ -220,13 +233,17 @@ namespace RIFDC
                     errors.Add(string.Format("id={0}: fail ", x.id));
                 }
             }
-
-            string rez = string.Format("Результат групповой операции:{0}{1}{2}", 
+            /*
+            string rez = string.Format("Результат групповой операции:{0}{1}{2}{3}",
+                            fn.chr13,
                             string.Join(fn.chr13, success), 
                             fn.chr13, 
                             string.Join(fn.chr13, errors));
+*/
 
-            ServiceFucntions.mb_info(rez);
+            string rez = $"Результат групповой операции:{fn.chr13}Общее количество объектов: {items.Count} {fn.chr13}Успешно: {success.Count}{fn.chr13} Ошибок: {errors.Count}";
+
+            fn.mb_info(rez);
         }
 
 

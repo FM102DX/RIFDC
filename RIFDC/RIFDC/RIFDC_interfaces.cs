@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using RICOMPANY.CommonFunctions;
+using CommonFunctions;
 using RIFDC;
 using System.Collections;
 using System.Text.RegularExpressions;
@@ -27,6 +27,7 @@ namespace RIFDC
         //Например, есть драйвер под MySql, под Acess, Excel и др.
 
         StorageType storageType { get; }
+
         bool isNowConnected { get; }
 
         string dbCommonTitle { get; }
@@ -41,15 +42,13 @@ namespace RIFDC
 
         void disconnect();
 
-        Lib.DbOperationResult checkObjectTable(IKeepable t);
+        Lib.DbOperationResult checkObjectTable(IKeepable t, bool drop=false);
         Lib.DbOperationResult deleteItem(IKeepable t);
 
         List<IUniversalRowDataContainer> readItems(IKeepable t, Lib.Filter filter);
 
-        // ?? saveItemsWholeStory (bool append)
-
-        //List<string> getMyDbPrefixList(IKeepable sampleObject);
         Lib.DbOperationResult deleteFiteredPackege(IKeepable sample, Lib.Filter filter);
+        
     }
 
     public interface IDataRoom
@@ -59,7 +58,7 @@ namespace RIFDC
         List<IUniversalRowDataContainer> makeGroupQuery(IKeeper keeper, Lib.GroupQueryTypeEnum groupQueryType, Relations.Relation targetRelation, string targetField);
 
         Lib.DbOperationResult saveObject(IKeepable t);
-        Lib.DbOperationResult checkObjectTable(IKeepable t);
+        Lib.DbOperationResult checkObjectTable(IKeepable t, bool drop=false);
         Lib.DbOperationResult deleteItem(IKeepable t);
         List<IUniversalRowDataContainer> readItems(IKeepable t, Lib.Filter filter);
 
@@ -105,6 +104,7 @@ namespace RIFDC
     }
     public interface IKeepable
     {
+        bool isTreeViewBased { get; } // является ли это деревом
         Lib.FieldsInfo fieldsInfo { get; }
         string tableName { get; }
         string entityName { get; }
@@ -112,7 +112,8 @@ namespace RIFDC
         string id { get; set; }
         string parentId { get; set; }
         string generateMyId();
-        
+
+        IKeeper getMyIkeeper();
         void setDefaultValues(bool forNonNullableOnly = true);
 
         List<IKeepable> getMyDependentObjectsFromRelation(Relations.Relation relation);
@@ -132,6 +133,7 @@ namespace RIFDC
         void saveMyPhoto();
         string displayId { get; }
         string displayName { get; }
+        string displayNameLong { get; }
         string entityType { get; }
         Lib.FieldInfo getFieldInfoByFieldClassName(string fieldClassName);
         string objectDump();
@@ -141,10 +143,14 @@ namespace RIFDC
         string searchable { get; }
 
         bool needToSaveMyHistory { get; }
+        int level { get; set; }
+
+        string getMyStringRepresentation();
 
     }
     public interface IKeeper
     {
+        bool isTreeViewBased { get; } // является ли это деревом
         IEnumerable items { get; }
         IKeepable sampleObject { get; }
         void readItems(bool append = false);
@@ -153,11 +159,13 @@ namespace RIFDC
         ISortMethodGroup sort { get; }
         IDataRoom dataRoom { get; set; }
         ICurrentRecord currentRecord { get; }
-        Lib.DbOperationResult checkMyTable();
+        Lib.DbOperationResult checkMyTable(bool drop=false);
         void addExistingObject(IKeepable t);
         Lib.ObjectOperationResult saveItem(IKeepable t);
         Lib.ObjectOperationResult deleteItem(IKeepable t, bool silent=false);
         IKeepable getItemById(string id);
+
+        void arrangeTreeLevels();
 
         Lib.ObjectOperationResult makeGroupQuery(Lib.GroupQueryTypeEnum groupQueryType, Relations.Relation targetRelation, string targetField);
 
@@ -170,6 +178,10 @@ namespace RIFDC
         void simpleObjectDump();
 
         void openMyHistoryFrm(Lib.InterFormMessage ifMsg);
+
+        List<Lib.ObjectOperationResult> deleteMultipleItems(List<IKeepable> tl, bool silent = false);
+
+        IKeepable GetRandomObject();
     }
 
     public interface IUniversalRowDataContainer
@@ -178,7 +190,10 @@ namespace RIFDC
         List<IUniversalDataElement> items { get; }
 
         object getValueByName(string name);
+        void setValueByName(string name, object value);
         void addNewElement(string _name, object _value);
+        
+
     }
     public interface IUniversalDataElement
     {
