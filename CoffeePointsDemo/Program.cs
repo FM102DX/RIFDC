@@ -35,7 +35,6 @@ namespace CoffeePointsDemo
 
         public static void init()
         {
-           
             cls_mysql.connectionData.server = "37.140.192.97";
             //cls_mysql.connectionData.port = "3306";
             cls_mysql.connectionData.dbName = "u1325524_rifdcdemo";

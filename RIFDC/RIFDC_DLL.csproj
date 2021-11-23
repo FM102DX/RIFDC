@@ -7,6 +7,14 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>RIFDC.ORM.BOMS</PackageId>
+    <Authors></Authors>
+    <Company>Research Inc.</Company>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/FM102DX/RIFDC</RepositoryUrl>
+    <Version>1.1.0</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.ComponentModel" />
