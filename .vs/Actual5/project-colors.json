@@ -5,7 +5,77 @@
       "ProjectGuid": "895da7db-42e4-4e17-bcae-85e08df3e800",
       "DisplayName": "RIFDC_DLL",
       "ColorIndex": 0
+    },
+    "a2835956-1b0e-4654-bd49-51fd62795943": {
+      "ProjectGuid": "a2835956-1b0e-4654-bd49-51fd62795943",
+      "DisplayName": "COMMONFUNCTIONS_DLL",
+      "ColorIndex": 1
+    },
+    "8d928f2f-8473-4ecb-aa38-92364d73b5ba": {
+      "ProjectGuid": "8d928f2f-8473-4ecb-aa38-92364d73b5ba",
+      "DisplayName": "RIFDC_COMPONENTS_DLL",
+      "ColorIndex": 2
+    },
+    "449ccbb8-4348-4bb8-bc6a-871b45c71cbb": {
+      "ProjectGuid": "449ccbb8-4348-4bb8-bc6a-871b45c71cbb",
+      "DisplayName": "RIFDC.Core",
+      "ColorIndex": 3
+    },
+    "6b2f7c0d-bec4-44f4-a491-dae73eb55652": {
+      "ProjectGuid": "6b2f7c0d-bec4-44f4-a491-dae73eb55652",
+      "DisplayName": "CommonFunctions",
+      "ColorIndex": 4
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "f7b5baa4-177c-4895-9817-e43549b5b716": {
+      "ProjectGuid": "f7b5baa4-177c-4895-9817-e43549b5b716",
+      "DisplayName": "CommonFunctionsWinForms",
+      "ColorIndex": 5
+    },
+    "b618777b-cc25-402e-bf11-d5d8519c2694": {
+      "ProjectGuid": "b618777b-cc25-402e-bf11-d5d8519c2694",
+      "DisplayName": "ObjectParametersEngine",
+      "ColorIndex": 6
+    },
+    "97da8305-5c33-4732-a40d-79151f1af867": {
+      "ProjectGuid": "97da8305-5c33-4732-a40d-79151f1af867",
+      "DisplayName": "StateMachine",
+      "ColorIndex": 7
+    },
+    "35970494-45e4-432d-8145-1b0aadb80d59": {
+      "ProjectGuid": "35970494-45e4-432d-8145-1b0aadb80d59",
+      "DisplayName": "CoffeePointsDemo",
+      "ColorIndex": 8
+    },
+    "c27f4bd1-2cf3-426c-aee3-be85cd1cb522": {
+      "ProjectGuid": "c27f4bd1-2cf3-426c-aee3-be85cd1cb522",
+      "DisplayName": "RIFDC.WinForms",
+      "ColorIndex": 9
+    },
+    "3830f6eb-d51a-47f2-a369-81ac366d12e9": {
+      "ProjectGuid": "3830f6eb-d51a-47f2-a369-81ac366d12e9",
+      "DisplayName": "RIFDC.ExcelAutomation",
+      "ColorIndex": 10
+    },
+    "402f79f0-d20f-48da-a2c4-b86198b69b94": {
+      "ProjectGuid": "402f79f0-d20f-48da-a2c4-b86198b69b94",
+      "DisplayName": "RIFDC.DbDrivers.MySql",
+      "ColorIndex": 11
+    },
+    "38ad7ff5-2ef5-4d3a-9e2c-c7c39723386d": {
+      "ProjectGuid": "38ad7ff5-2ef5-4d3a-9e2c-c7c39723386d",
+      "DisplayName": "RIFDC.DbDrivers.Excel",
+      "ColorIndex": 12
+    },
+    "1fc8a847-1fe2-410d-9490-1807f3ac0696": {
+      "ProjectGuid": "1fc8a847-1fe2-410d-9490-1807f3ac0696",
+      "DisplayName": "ConsoleApp1",
+      "ColorIndex": 13
     }
   },
-  "NextColorIndex": 1
+  "NextColorIndex": 14
 }

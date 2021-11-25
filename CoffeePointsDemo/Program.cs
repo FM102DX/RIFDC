@@ -23,7 +23,7 @@ namespace CoffeePointsDemo
             //Application.Run(new MainAppFrm());
 
             CoffeePointsApp.init();
-
+            
         }
 
     }

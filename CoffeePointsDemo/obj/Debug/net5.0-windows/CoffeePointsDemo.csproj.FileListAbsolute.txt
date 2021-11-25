@@ -61,14 +61,6 @@ C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\CoffeePointsD
 C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\CoffeePointsDemo.dll
 C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\ref\CoffeePointsDemo.dll
 C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\CoffeePointsDemo.pdb
-C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\BouncyCastle.Crypto.dll
-C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\Google.Protobuf.dll
-C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\K4os.Compression.LZ4.dll
-C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\K4os.Compression.LZ4.Streams.dll
-C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\K4os.Hash.xxHash.dll
-C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\MySql.Data.dll
-C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\Ubiety.Dns.Core.dll
-C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\ZstdNet.dll
 C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\CommonFunctionsNet50.dll
 C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\CommonFunctionsWinForms.dll
 C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\ObjectParametersEngine.dll
@@ -82,3 +74,7 @@ C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\ObjectParamet
 C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\StateMachine.pdb
 C:\Develop\RIFDC\Actual5\CoffeePointsDemo\obj\Debug\net5.0-windows\CoffeePointsDemo.csproj.CopyComplete
 C:\Develop\RIFDC\Actual5\CoffeePointsDemo\obj\Debug\net5.0-windows\CoffeePointsDemo.genruntimeconfig.cache
+C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\CommonFunctions.dll
+C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\ControlValueSaver.dll
+C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\CommonFunctions.pdb
+C:\Develop\RIFDC\Actual5\CoffeePointsDemo\bin\Debug\net5.0-windows\ControlValueSaver.pdb
