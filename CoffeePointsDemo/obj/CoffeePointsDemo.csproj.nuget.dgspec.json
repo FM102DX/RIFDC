@@ -34,8 +34,8 @@
           "net5.0-windows7.0": {
             "targetAlias": "net5.0-windows",
             "projectReferences": {
-              "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctionsNet50.csproj": {
-                "projectPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctionsNet50.csproj"
+              "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctions.csproj": {
+                "projectPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctions.csproj"
               },
               "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsWinForms\\CommonFunctionsWinForms.csproj": {
                 "projectPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsWinForms\\CommonFunctionsWinForms.csproj"
@@ -61,12 +61,6 @@
       "frameworks": {
         "net5.0-windows7.0": {
           "targetAlias": "net5.0-windows",
-          "dependencies": {
-            "MySql.Data": {
-              "target": "Package",
-              "version": "[8.0.27, )"
-            }
-          },
           "imports": [
             "net461",
             "net462",
@@ -156,12 +150,12 @@
         }
       }
     },
-    "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctionsNet50.csproj": {
+    "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctions.csproj": {
       "version": "1.1.0",
       "restore": {
-        "projectUniqueName": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctionsNet50.csproj",
+        "projectUniqueName": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctions.csproj",
         "projectName": "Ricompany.CommonFunctions",
-        "projectPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctionsNet50.csproj",
+        "projectPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctions.csproj",
         "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
         "outputPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\obj\\",
         "projectStyle": "PackageReference",
@@ -246,8 +240,8 @@
           "net5.0-windows7.0": {
             "targetAlias": "net5.0-windows",
             "projectReferences": {
-              "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctionsNet50.csproj": {
-                "projectPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctionsNet50.csproj"
+              "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctions.csproj": {
+                "projectPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctions.csproj"
               }
             }
           }
@@ -373,8 +367,8 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctionsNet50.csproj": {
-                "projectPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctionsNet50.csproj"
+              "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctions.csproj": {
+                "projectPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctions.csproj"
               }
             }
           }
@@ -437,8 +431,8 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctionsNet50.csproj": {
-                "projectPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctionsNet50.csproj"
+              "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctions.csproj": {
+                "projectPath": "C:\\Develop\\RI\\CommonFunctions\\CommonFunctionsNet50\\CommonFunctions.csproj"
               },
               "C:\\Develop\\RI\\CommonFunctions\\ObjectParametersEngine\\ObjectParametersEngine.csproj": {
                 "projectPath": "C:\\Develop\\RI\\CommonFunctions\\ObjectParametersEngine\\ObjectParametersEngine.csproj"

@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "dgSpecHash": "4E93w8jnw8vL8ruCCLyELBvhDUIZsCjMrGIoJlPE813zaHPIPS5oaJR09+fBc0p1sCBdkgtG4sP70Cww5CmRmw==",
+  "success": false,
+  "projectFilePath": "C:\\Develop\\RIFDC\\Actual5\\RIFDC.DBDrivers.MySql\\RIFDC.DbDrivers.MySql.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\admin\\.nuget\\packages\\ricompany.commonfunctions\\1.1.0\\ricompany.commonfunctions.1.1.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project RIFDC is not compatible with net5.0 (.NETCoreApp,Version=v5.0). Project RIFDC supports: net5.0-windows7.0 (.NETCoreApp,Version=v5.0)",
+      "libraryId": "RIFDC",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    }
+  ]
+}

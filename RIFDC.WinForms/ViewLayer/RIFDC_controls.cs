@@ -12,7 +12,7 @@ using Ricompany.CommonFunctions;
 using RIFDC;
 using System.Drawing;
 
-namespace RIFDC.WinForms
+namespace RIFDC
 {
 
     /*
@@ -32,6 +32,10 @@ namespace RIFDC.WinForms
     
 
 
+    // интерфейсы
+
+
+
 
 
 
@@ -39,7 +43,7 @@ namespace RIFDC.WinForms
 
     #region //основные классы
 
-    public class RIFDC_TextBox : RIFDC_TextBoxBasedControl, IRecordBasedControl
+    public class RIFDC_TextBox : RIFDC_TextBoxBasedControl, RIFDC.IRecordBasedControl
     {
         //представляет textBox
         public string ctrlTypeName { get { return "System.Windows.Forms.TextBox"; } }
@@ -1309,7 +1313,7 @@ namespace RIFDC.WinForms
         }
     }
 
-    public class DFCSearchControl : DFCSearchControlPattern, IDFCSearchControl
+    public class DFCSearchControl : DFCSearchControlPattern, ISearchControl
     {
 
         public DFCSearchControl (DataFormComponent _parent, Lib.FiltrationTypeEnum filtrationType, TextBox _tbSearchStr, Button _btnSearch, Button _btnReset) : base (_parent, filtrationType, _tbSearchStr, _btnSearch, _btnReset)
@@ -1353,84 +1357,6 @@ namespace RIFDC.WinForms
     }
 
 
-        //ENUMS
-
-    public enum DataGridEditabilityMode
-    {
-        NotEditableAtAll = 1
-    }
-
-    public enum FrmControlTypeEnum
-    {
-        TextBox = 0,
-        CheckBox = 1,
-        DataGrid = 2,
-        List = 3,
-        RichTextBox = 4,
-        Button = 5,
-        ComboBox = 6,
-        DateTimePicker = 7,
-        MaskedTextBox = 8,
-        Undefined = 99
-
-    }
-
-    public enum FormUpdateModeEnum
-    {
-        updateFieldOnLeaveImmediately = 1,
-        updateWholeRecordOnButtonClick = 2
-    }
-    public enum FormEventTypeEnum
-    {
-        btnClick = 1,
-        fieldLeft = 2,
-        recordSaveNew = 3,
-        recordUpdateAttempt = 4,
-
-        currentRecordChangeAttempt = 5,
-        currentRecordChanged = 6,
-        currentRecordEditCancelAttenpt = 7, //нажатие escape при редактировании записи
-
-        keyPress = 8,
-        textBoxChanged = 9,
-        checkBoxCheckedChanged = 10,
-        comboBoxSelectionChanged = 11,
-        dtPickerSelectionChanged = 12,
-        dependencyProcessionRequest = 13
-
-    }
-    public enum FormBtnTypeEnum
-    {
-        btnOk = 1,
-        btnCancel = 2,
-        btnConfirmEdit = 3,
-        btnCancelEdit = 4, // это как на форме esc нажимаешь и оно возвращается в исходное состояние
-        btnAddNew = 5,
-        btnEdit = 6,
-        btnDelete = 7,
-        btnOrderUp = 8,
-        btnOrderDown = 9,
-        btnRecordMoveNextRecord = 10,
-        btnRecordMovePrevRecord = 11,
-        btnSaveRecord = 12,
-        btnReloadDataFormComponent = 13,
-        btnOpenHistoryForm =14,
-        btnOpenExternalCrudForm=15,
-        btnSortBySelectedFieldAsc = 30,
-        btnSortBySelectedFieldDesc = 31,
-        btnToggleMultiSelectionMode = 40,
-        btnSelectAll = 41,
-        btnSelectNone = 42,
-        
-        btnOpenGroupOperationsForm = 43,
-        
-        btnTreeViewAddRootElement = 50,
-        btnTreeViewExpandAll = 51,
-        btnTreeViewCollapseAll = 52,
-       // btnTreeViewCollapseAll = 52,
-
-        btnTestA = 90,
-        btnTestB = 91
-    }
+   
 }
 

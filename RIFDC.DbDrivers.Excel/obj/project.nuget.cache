@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "dgSpecHash": "YX9yGLn3GvA7+UDTJQw7gbYrqUlTeJmQJBTOBqwOBLIB2XNbVYI3KzRAmX/BEJnaAtM6H9IRi5NfWfxEpzQUig==",
+  "success": false,
+  "projectFilePath": "C:\\Develop\\RIFDC\\Actual5\\RIFDC.DbDrivers.Excel\\RIFDC.DbDrivers.Excel.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project RIFDC is not compatible with net5.0 (.NETCoreApp,Version=v5.0). Project RIFDC supports: net5.0-windows7.0 (.NETCoreApp,Version=v5.0)",
+      "libraryId": "RIFDC",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    }
+  ]
+}
