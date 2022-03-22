@@ -1,0 +1,10 @@
+C:\Develop\RIFDC\Actual5\RIFDC.WinForms\obj\Debug\net5.0-windows\RIFDC.WinForms.csproj.AssemblyReference.cache
+C:\Develop\RIFDC\Actual5\RIFDC.WinForms\obj\Debug\net5.0-windows\IntraToolAutomation.ExcelObjectReaderFrm.resources
+C:\Develop\RIFDC\Actual5\RIFDC.WinForms\obj\Debug\net5.0-windows\RIFDCComponents.ExcelTreeViewBasedObjectReaderComponent.ExcelTreeViewBasedObjectReader.resources
+C:\Develop\RIFDC\Actual5\RIFDC.WinForms\obj\Debug\net5.0-windows\RIFDC.GroupOperationsFrm.resources
+C:\Develop\RIFDC\Actual5\RIFDC.WinForms\obj\Debug\net5.0-windows\RIFDC.WinForms.HistoryManagerFrm.resources
+C:\Develop\RIFDC\Actual5\RIFDC.WinForms\obj\Debug\net5.0-windows\RIFDC.WinForms.csproj.GenerateResource.cache
+C:\Develop\RIFDC\Actual5\RIFDC.WinForms\obj\Debug\net5.0-windows\RIFDC.WinForms.GeneratedMSBuildEditorConfig.editorconfig
+C:\Develop\RIFDC\Actual5\RIFDC.WinForms\obj\Debug\net5.0-windows\RIFDC.WinForms.AssemblyInfoInputs.cache
+C:\Develop\RIFDC\Actual5\RIFDC.WinForms\obj\Debug\net5.0-windows\RIFDC.WinForms.AssemblyInfo.cs
+C:\Develop\RIFDC\Actual5\RIFDC.WinForms\obj\Debug\net5.0-windows\RIFDC.WinForms.csproj.CoreCompileInputs.cache
