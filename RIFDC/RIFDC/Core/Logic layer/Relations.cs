@@ -61,7 +61,7 @@ namespace RIFDC
                     }
                 }
 
-                public string targetClassName { get { return fn.getEntityTypeFromFullTypeNameString(targetClass.Name); } }
+                public string targetClassName { get { return fn.GetEntityTypeFromFullTypeNameString(targetClass.Name); } }
 
                 public string fieldName; //имя поля в классе, которым он участвует в этом relation
 
@@ -284,7 +284,7 @@ namespace RIFDC
             {
                 //инициализация последующего элемента из предыдущего
 
-                //addElement(new RelationsChainElement(r, myEntityName)); 
+                //AddElement(new RelationsChainElement(r, myEntityName)); 
             }
 
             public string tailTableName
@@ -379,11 +379,11 @@ namespace RIFDC
                        left.myKeyFieldName == right.myKeyFieldName &&
                        left.nextKeyFieldName == right.nextKeyFieldName;
                     /*
-                    fn.dp("");
-                    fn.dp("Comparing entities:");
-                    fn.dp(left.ToString());
-                    fn.dp(right.ToString());
-                    fn.dp("Rezult is: " + ( rez ? "EQUAL" : "NOT EQUAL"));
+                    fn.Dp("");
+                    fn.Dp("Comparing entities:");
+                    fn.Dp(left.ToString());
+                    fn.Dp(right.ToString());
+                    fn.Dp("Rezult is: " + ( rez ? "EQUAL" : "NOT EQUAL"));
                     */
                    
 

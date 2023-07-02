@@ -158,7 +158,7 @@ namespace RIFDC
 
                     int n = digits - (rez.Length - sepPosition - 1);
 
-                    if (n > 0) { rez = rez + fn.strRepeater("0", n); }
+                    if (n > 0) { rez = rez + fn.RepeatString("0", n); }
 
                     vr.validationSuccess = true;
                     vr.validatedValue = rez;
@@ -445,7 +445,7 @@ namespace RIFDC
                     Validation.ValidationResult vr = new Validation.ValidationResult();
                     Regex regex;
                     string source = Convert.ToString(value);
-                    source = fn.strRemoveArrSymbols(source, @"\|/^");
+                    source = fn.RemoveArraySymbolsFromString(source, @"\|/^");
                     regex = new Regex("[^a-zA-Zа-яА-Я0-9() +-_:;!?@#.*]", RegexOptions.IgnoreCase);
                     source = regex.Replace(source, "");
 
@@ -467,7 +467,7 @@ namespace RIFDC
                     Validation.ValidationResult vr = new Validation.ValidationResult();
                     Regex regex;
                     string source = Convert.ToString(value);
-                    source = fn.strRemoveArrSymbols(source, @"\|/^");
+                    source = fn.RemoveArraySymbolsFromString(source, @"\|/^");
                     regex = new Regex("[^a-zA-Z0-9_*]", RegexOptions.IgnoreCase);
                     source = regex.Replace(source, "");
 
@@ -489,7 +489,7 @@ namespace RIFDC
                     Validation.ValidationResult vr = new Validation.ValidationResult();
                     Regex regex;
                     string source = Convert.ToString(value);
-                    source = fn.strRemoveArrSymbols(source, @"\|/^");
+                    source = fn.RemoveArraySymbolsFromString(source, @"\|/^");
                     regex = new Regex("[^a-zA-Zа-яА-Я0-9 ]", RegexOptions.IgnoreCase);
                     source = regex.Replace(source, "");
 

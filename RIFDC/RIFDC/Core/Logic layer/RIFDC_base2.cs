@@ -83,7 +83,7 @@ namespace RIFDC
         }
         public static void log(object domain, object text)
         {
-            string s = Convert.ToString(domain).ToUpper() + "_" + fn.toStringNullConvertion(text);
+            string s = Convert.ToString(domain).ToUpper() + "_" + fn.ConvertObjectToString(text);
             if (logIsOn)
             {
                 switch (logDirection)
@@ -92,11 +92,11 @@ namespace RIFDC
                         writeToFile(s);
                         break;
                     case logDirectionEnum.toConsole:
-                        fn.dp(s);
+                        fn.Dp(s);
                         break;
                     case logDirectionEnum.bothToConAndFile:
                         writeToFile(s);
-                        fn.dp(s);
+                        fn.Dp(s);
                         break;
 
 
@@ -284,7 +284,7 @@ namespace RIFDC
                 msg.args = args;
                 if (!msg.isCorrect())
                 {
-                    fn.dp("OBJECT MESSENGER ERROR - неверный формат объектного сообщения");
+                    fn.Dp("OBJECT MESSENGER ERROR - неверный формат объектного сообщения");
                     return;
                 }
 
@@ -338,7 +338,7 @@ namespace RIFDC
             }
             else
             {
-                fn.dp("ERROR creation dependency: objects don't fit relation");
+                fn.Dp("ERROR creation dependency: objects don't fit relation");
                 return null;
             }
         }

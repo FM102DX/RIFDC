@@ -59,10 +59,10 @@ namespace RIFDC
 
         /*
          * 
-        List<IKeepable> result = new List<IKeepable>();
+        List<IKeepable> Result = new List<IKeepable>();
         foreach (IKeepable t in source)
         {
-            if (fit(t)) { result.Add(t); }
+            if (fit(t)) { Result.Add(t); }
         }
         */
     }
@@ -91,7 +91,7 @@ namespace RIFDC
             {
                 regex = new Regex(@"B" + cr.filteringRule.ruleOrder + "E");
                 s = regex.Replace(s, eval);
-                //fn.dp("Fit, repalcements, s="+s);
+                //fn.Dp("Fit, repalcements, s="+s);
             }
 
             //теперь надо вычислить полученное выражение (true and false and true...)

@@ -137,8 +137,8 @@ namespace RIFDC
                 try
                 {
                     //какитам поля, в этом запросе
-                    d.addNewElement("reznum", fn.toStringNullConvertion( reader["reznum"]));
-                    d.addNewElement("extid", fn.toStringNullConvertion(reader["extid"]));
+                    d.addNewElement("reznum", fn.ConvertObjectToString( reader["reznum"]));
+                    d.addNewElement("extid", fn.ConvertObjectToString(reader["extid"]));
                     
                 }
                 catch (Exception e)
@@ -262,7 +262,7 @@ namespace RIFDC
                 return Lib.DbOperationResult.sayNo("Target Object is null");
             }
 
-            if (fn.toStringNullConvertion(t.id) == "")
+            if (fn.ConvertObjectToString(t.id) == "")
             {
                 return Lib.DbOperationResult.sayNo("Target Object Id is null");
             }
@@ -313,7 +313,7 @@ namespace RIFDC
             DateTime dateTimeOfUpdate = Convert.ToDateTime(null);
             Lib.DbOperationResult _r;
 
-            if (fn.toStringNullConvertion(t.id) == "")
+            if (fn.ConvertObjectToString(t.id) == "")
             {
                 do
                 {
@@ -325,7 +325,7 @@ namespace RIFDC
                         //используем то, что база проверяет уникальность поля
                         dateTimeOfCreation = DateTime.Now;
 
-                        //t.setMyParameter("id", fn.generate4blockGUID());  // 2 мая 2021
+                        //t.setMyParameter("id", fn.GenerateFourBlockString());  // 2 мая 2021
                         
                         t.setMyParameter("id", t.generateMyId()); 
 
@@ -452,7 +452,7 @@ namespace RIFDC
                                             mySQLDateTime = reader.GetMySqlDateTime(f.fieldDbName);
                                             tmp = Convert.ToDateTime(mySQLDateTime);
 
-                                          //  dateStr = fn.toStringNullConvertion(mySQLDateTime.GetDateTime());
+                                          //  dateStr = fn.ConvertObjectToString(mySQLDateTime.GetDateTime());
 
                                             /*
                                                     if (mySQLDateTime.Day > 0)
@@ -482,7 +482,7 @@ namespace RIFDC
                                         tmp = null;
                                     }
                                         /*
-                                        datConvertRezult= DateTime.TryParseExact(fn.toStringNullConvertion(reader.GetMySqlDateTime(f.fieldDbName)), 
+                                        datConvertRezult= DateTime.TryParseExact(fn.ConvertObjectToString(reader.GetMySqlDateTime(f.fieldDbName)), 
                                                             "MM.dd.yyyy hh:mm:ss", CultureInfo.InvariantCulture,
                                                             DateTimeStyles.None, out dt); */
                             }
@@ -812,7 +812,7 @@ namespace RIFDC
 
                 //теперь условие where
                 s = s + (whereCondition == "" ? "" : " where " + whereCondition);
-                fn.dp(s);
+                fn.Dp(s);
             }
             else
             {
@@ -857,7 +857,7 @@ namespace RIFDC
         {
             //конвертация значений из IKeeper в тот формат, который применителен именно для этой БД, для использования в запросах
             //например, мы храним даты в 07.07.2007, а в Mysql они лежат как 2007.07.07
-            string s = fn.toStringNullConvertion(value);
+            string s = fn.ConvertObjectToString(value);
             DateTime date;
             string s0 = "";
 
@@ -1221,14 +1221,14 @@ namespace RIFDC
             //здесь для каждого типа сервера бд (aceess, mysql и др. указывается свой способ получения connectionString) 
             get
             {
-                string server = fn.sfn(connectionData.server, "server=", $";");
-                string port = fn.sfn(connectionData.port, "port=", ";");
-                string dbName = fn.sfn(connectionData.dbName, "database=", ";");
-                string dbUser = fn.sfn(connectionData.dbUser, "user=", ";");
-                string dbPassword = fn.sfn(connectionData.dbPassword, "password=", ";");
-                string persistSecurityInfo = fn.sfn(connectionData.persistSecurityInfo, "persist Security Info=", ";");
-                string pooling = fn.sfn(connectionData.pooling, "pooling=", ";");
-                string useCompression = fn.sfn(connectionData.useCompression, "use Compression=", ";");
+                string server = fn.SubstituteStringBeginEnd(connectionData.server, "server=", $";");
+                string port = fn.SubstituteStringBeginEnd(connectionData.port, "port=", ";");
+                string dbName = fn.SubstituteStringBeginEnd(connectionData.dbName, "database=", ";");
+                string dbUser = fn.SubstituteStringBeginEnd(connectionData.dbUser, "user=", ";");
+                string dbPassword = fn.SubstituteStringBeginEnd(connectionData.dbPassword, "password=", ";");
+                string persistSecurityInfo = fn.SubstituteStringBeginEnd(connectionData.persistSecurityInfo, "persist Security Info=", ";");
+                string pooling = fn.SubstituteStringBeginEnd(connectionData.pooling, "pooling=", ";");
+                string useCompression = fn.SubstituteStringBeginEnd(connectionData.useCompression, "use Compression=", ";");
                 string charSet = "CHARSET = utf8;";
                 return server + port + dbName + dbUser + dbPassword + persistSecurityInfo + pooling + useCompression+ charSet;
             }
@@ -1236,7 +1236,7 @@ namespace RIFDC
 
         public new string dbCommonTitle
         {
-            get { return fn.sfn(connectionData.server, "server=", ";") + fn.sfn(connectionData.dbName, "dbName=", ";"); }
+            get { return fn.SubstituteStringBeginEnd(connectionData.server, "server=", ";") + fn.SubstituteStringBeginEnd(connectionData.dbName, "dbName=", ";"); }
         }
 
         public MySqlCluster_MySqlConnectorNET()

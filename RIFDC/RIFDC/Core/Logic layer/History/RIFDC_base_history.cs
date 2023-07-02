@@ -35,7 +35,7 @@ namespace RIFDC
         {
             // это откат последнего изменения
 
-            fn.dp("Rolling back history operation ");
+            fn.Dp("Rolling back history operation ");
 
             //тут надо 1) вернуть старое значение в тот объект
 
@@ -56,7 +56,7 @@ namespace RIFDC
             foreach (Lib.FieldInfo f in alt.items)
             {
                 h = new HistorySaverUnit();
-                //h.setMyParameter("entityName", h.entityName);
+                //H.setMyParameter("entityName", H.entityName);
                 h.setMyParameter("objectId", alt.id);
                 h.setMyParameter("targetEntityName", alt.entityName);
                 h.setMyParameter("oldValue", f.actualValue);
