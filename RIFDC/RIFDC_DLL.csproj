@@ -53,11 +53,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.27" />
-    <PackageReference Include="ResearchInc.CommonFunctionsNet50" Version="1.0.2" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.256001">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RIFDC_01\Actual4--last copy of ver under net48\CommonFunctions\COMMONFUNCTIONS_DLL.csproj" />
   </ItemGroup>
 </Project>

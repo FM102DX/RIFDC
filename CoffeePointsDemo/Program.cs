@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using RIFDC;
-using RICOMPANY.CommonFunctions;
-
+using CommonFunctions;
+using MySql.Data.MySqlClient;
 
 namespace CoffeePointsDemo
 {
@@ -35,15 +35,15 @@ namespace CoffeePointsDemo
 
         public static void init()
         {
-            cls_mysql.connectionData.server = "37.140.192.97";
-            //cls_mysql.connectionData.port = "3306";
-            cls_mysql.connectionData.dbName = "u1325524_rifdcdemo";
-            cls_mysql.connectionData.dbUser = "u1325524_rifdcdemo_user01";
-            cls_mysql.connectionData.dbPassword = "rG%hq170";
+            cls_mysql.connectionData.server = "31.31.201.152";
+            cls_mysql.connectionData.port = "3306";
+            cls_mysql.connectionData.dbName = "rifdcdemo";
+            cls_mysql.connectionData.dbUser = "rifdcdemo_user01";
+            cls_mysql.connectionData.dbPassword = "aZ3hD2eE8r";
 
             RIFDC_App.mainDataRoom = mainDataRoom;
             RIFDC_App.currentUserId = "user01";
-
+            
             #region localCnn
 
             /*

@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using RICOMPANY.CommonFunctions;
+using CommonFunctions;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using RIFDC;

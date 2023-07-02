@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Text;
-using RICOMPANY.CommonFunctions;
+using CommonFunctions;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -1221,7 +1221,7 @@ namespace RIFDC
             //здесь для каждого типа сервера бд (aceess, mysql и др. указывается свой способ получения connectionString) 
             get
             {
-                string server = fn.sfn(connectionData.server, "server=", ";");
+                string server = fn.sfn(connectionData.server, "server=", $";");
                 string port = fn.sfn(connectionData.port, "port=", ";");
                 string dbName = fn.sfn(connectionData.dbName, "database=", ";");
                 string dbUser = fn.sfn(connectionData.dbUser, "user=", ";");

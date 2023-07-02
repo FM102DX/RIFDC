@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using RICOMPANY.CommonFunctions;
+using CommonFunctions;
 using System.IO;
 
 

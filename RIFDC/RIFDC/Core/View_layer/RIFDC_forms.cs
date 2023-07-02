@@ -1,4 +1,4 @@
-﻿using RICOMPANY.CommonFunctions;
+﻿using CommonFunctions;
 using ObjectParameterEngine;
 using StateMachineNamespace;
 using System;
