@@ -45,7 +45,7 @@ namespace RIFDC
             {
                 foreach (Excel.Worksheet ws in _wb.Worksheets)
                 {
-                    fn.Dp(ws.Name.ToLower());
+                    Fn.Dp(ws.Name.ToLower());
                     if (ws.Name.ToLower() == name.ToLower())
                     {
                           return ws;
@@ -417,9 +417,9 @@ namespace RIFDC
                 s = "";
                 for (j = 0; j < columnCount_1; j++)
                 {
-                    s += fn.ConvertObjectToString(_dataArray[i, j]);
+                    s += Fn.ConvertObjectToString(_dataArray[i, j]);
                 }
-                fn.Dp(s);
+                Fn.Dp(s);
             }
         }
 
@@ -731,7 +731,7 @@ namespace RIFDC
             }
             catch (Exception e)
             {
-                fn.Dp("ERROR EXCEL " + e.Message);
+                Fn.Dp("ERROR EXCEL " + e.Message);
             }
             return null;
 

@@ -116,7 +116,7 @@ namespace RIFDC
                     _arr = s.Split('=');
                     setCtrlValue(_arr[0], _arr[1]);
 
-                    fn.Dp(_arr[0] + "=" + _arr[1]);
+                    Fn.Dp(_arr[0] + "=" + _arr[1]);
                 }
 
             }

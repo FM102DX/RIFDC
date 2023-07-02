@@ -35,7 +35,7 @@ namespace RIFDC
         {
             // это откат последнего изменения
 
-            fn.Dp("Rolling back history operation ");
+            Fn.Dp("Rolling back history operation ");
 
             //тут надо 1) вернуть старое значение в тот объект
 

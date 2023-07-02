@@ -91,7 +91,7 @@ namespace RIFDC
             {
                 regex = new Regex(@"B" + cr.filteringRule.ruleOrder + "E");
                 s = regex.Replace(s, eval);
-                //fn.Dp("Fit, repalcements, s="+s);
+                //Fn.Dp("Fit, repalcements, s="+s);
             }
 
             //теперь надо вычислить полученное выражение (true and false and true...)

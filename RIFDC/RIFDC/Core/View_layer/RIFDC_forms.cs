@@ -101,9 +101,9 @@ namespace RIFDC
             get { return _fillEditControlsFlag; }
             set {
 
-            //    fn.Dp("");
-              //  fn.Dp("fillEditControlsFlag changed to" + value.ToString());
-              //  fn.Dp("");
+            //    Fn.Dp("");
+              //  Fn.Dp("fillEditControlsFlag changed to" + value.ToString());
+              //  Fn.Dp("");
 
                 _fillEditControlsFlag = value; }
         }
@@ -142,7 +142,7 @@ namespace RIFDC
         public void imSorted_EventHandler(Lib.Sorter sorter)
         {
             //это функция, которая отрабатывает когда внутри какого-то IGridBasedCtrl происходит сортировка
-            //fn.Dp(sorter.sortingRuleList.Count.ToString());
+            //Fn.Dp(sorter.sortingRuleList.Count.ToString());
             dataSource.sort.applySorter(sorter);
             fillTheForm();
         }
@@ -533,7 +533,7 @@ namespace RIFDC
             {
                 //процессинг посимвольного контроля ввода, т.е. какие-то символы можно ввести, какие-то - нет
 
-                //fn.Dp("Called EventHandler_Fly_TextBoxTextChanged");
+                //Fn.Dp("Called EventHandler_Fly_TextBoxTextChanged");
                 //parent.fillEditControlsFlag = false;
 
                 if (parent.fillEditControlsFlag) { /* tb.Tag = tb.Text; */ return; }
@@ -625,7 +625,7 @@ namespace RIFDC
 
                     ServiceFucntions.mb_info(r.msg);
                     tbb.targetControl.Focus(); //не дать уйти с поля
-                    tbb.targetControl.selectionStart = fn.ConvertObjectToString(tbb.getTargetControlValue()).Length;
+                    tbb.targetControl.selectionStart = Fn.ConvertObjectToString(tbb.getTargetControlValue()).Length;
                 }
 
                 parent.validatingEditControlFlag = false;
@@ -657,7 +657,7 @@ namespace RIFDC
 
                 // string oldText;
 
-                newText = fn.ConvertObjectToString(tbb.getTargetControlValue());
+                newText = Fn.ConvertObjectToString(tbb.getTargetControlValue());
 
                 // if (tbb.targetControl.targetControl.Tag == null) oldText = ""; else oldText = tbb.targetControl.targetControl.Tag.ToString();
 
@@ -1140,7 +1140,7 @@ namespace RIFDC
                                 break;
 
                             case FormBtnTypeEnum.btnOpenExternalCrudForm:
-                                fn.ParamStringManager pm = new fn.ParamStringManager(mb.paramStr);
+                                Fn.ParamStringManager pm = new Fn.ParamStringManager(mb.paramStr);
                                 string code = pm.GetParamValue("mappingCode");
                                 parent.externalCrudMatrixCollection.showForm(code);
                                 break;
@@ -1357,7 +1357,7 @@ namespace RIFDC
 
                 //получаем новую запись со значениями по умолчани
                 IKeepable t = parent.dataSource.createNewObject_notInserted();
-                t.hash = fn.RandomString(10);
+                t.hash = Fn.RandomString(10);
 
                 //сохраняем в базу
                 string id = parent.dataSource.saveItem(t).createdObjectId;
@@ -1948,7 +1948,7 @@ namespace RIFDC
                     
                     if (p == null) return null;
 
-                    string objectName = fn.ConvertObjectToString(p.value);
+                    string objectName = Fn.ConvertObjectToString(p.value);
 
                     if (objectName == "") return null;
 

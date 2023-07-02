@@ -143,7 +143,7 @@ namespace RIFDC
                 progress = Convert.ToInt32(_progress);
             }
 
-            status = fn.Lst2str(timeArr.Cast<Object>().ToList());
+            status = Fn.Lst2str(timeArr.Cast<Object>().ToList());
         }
         public void addBatchProcessorUnit(string _path, string _wbName, string _wsName, string _startAddRess, string _endAddRess, long _drrShift)
         {

@@ -206,7 +206,7 @@ namespace RIFDC
         {
             //cb = (CheckBox)targetControl;
             if (value == null) value = false;
-            lb.Text = fn.ConvertObjectToString(value);
+            lb.Text = Fn.ConvertObjectToString(value);
         }
         public object getValue()
         {
@@ -377,7 +377,7 @@ namespace RIFDC
                             isSelected = Convert.ToBoolean(r.Cells[0].Value);
                             if (isSelected)
                             {
-                                rez.Add(fn.ConvertObjectToString(r.Cells[data.boundColumnIndex].Value));
+                                rez.Add(Fn.ConvertObjectToString(r.Cells[data.boundColumnIndex].Value));
                             }
                         }
                         catch
@@ -559,17 +559,17 @@ namespace RIFDC
 
                     case Lib.FieldTypeEnum.Int:
                     case Lib.FieldTypeEnum.Double:
-                        stringValue = (itsNull) ? "" : fn.ConvertObjectToString(val.value);
+                        stringValue = (itsNull) ? "" : Fn.ConvertObjectToString(val.value);
                         break;
 
 
                     case Lib.FieldTypeEnum.String:
                     case Lib.FieldTypeEnum.Memo:
-                        stringValue = (itsNull) ? "" : fn.ConvertObjectToString(val.value);
+                        stringValue = (itsNull) ? "" : Fn.ConvertObjectToString(val.value);
                         break;
 
                     default:
-                        stringValue = fn.ConvertObjectToString(val.value);
+                        stringValue = Fn.ConvertObjectToString(val.value);
                         break;
                 }
 
@@ -584,7 +584,7 @@ namespace RIFDC
 
                     case "DataGridViewCheckBoxCell":
                         workingCell.Value = (val == null) ? false : (bool)val.value;
-                        //fn.Dp("newCell.Value=" + newCell.Value.ToString());
+                        //Fn.Dp("newCell.Value=" + newCell.Value.ToString());
                         break;
 
                         //TODO здесь другие типы контролов
@@ -603,8 +603,8 @@ namespace RIFDC
             {
                 Color c = paint.getMyColor(t);
 
-              //  fn.Dp("COLOR=" + c.ToString());
-                //if (c==Color.White) fn.Dp ()
+              //  Fn.Dp("COLOR=" + c.ToString());
+                //if (c==Color.White) Fn.Dp ()
 
                 dgr.DefaultCellStyle.BackColor = paint.getMyColor(t);
 
@@ -655,7 +655,7 @@ namespace RIFDC
 
             foreach (DataGridViewRow r in dgr.Rows)
             {
-                if (fn.ConvertObjectToString(r.Cells[data.boundColumnIndex].Value) == value2)
+                if (Fn.ConvertObjectToString(r.Cells[data.boundColumnIndex].Value) == value2)
                 {
                     return r;
                 }
@@ -677,7 +677,7 @@ namespace RIFDC
         {
             foreach (DataGridViewColumn c0 in dgr.Columns)
             {
-                if (fn.ConvertObjectToString(c0.Tag).ToLower() == fieldClassName.ToLower()) return c0;
+                if (Fn.ConvertObjectToString(c0.Tag).ToLower() == fieldClassName.ToLower()) return c0;
             }
             return null;
         }
@@ -707,7 +707,7 @@ namespace RIFDC
                 {
                     if (s[0].ToString() == "^" || s[0].ToString() == "˅")
                     {
-                        s = s0 + " " + fn.SubstrBeginsFromLtrNo(s, 2);
+                        s = s0 + " " + Fn.SubstrBeginsFromLtrNo(s, 2);
                     }
                     else
                     {
@@ -756,7 +756,7 @@ namespace RIFDC
             catch (Exception e1)
             {
                 //ну просто не будет сортировать
-                fn.Dp(e1.Message);
+                Fn.Dp(e1.Message);
 
             }
         }
@@ -782,7 +782,7 @@ namespace RIFDC
             // или где-то надыбать объект, но это долго
 
 
-            string value = fn.ConvertObjectToString(_value);
+            string value = Fn.ConvertObjectToString(_value);
 
             string id = Convert.ToString(value);
 
@@ -802,7 +802,7 @@ namespace RIFDC
         }
         public object getValue()
         {
-            string val = fn.ConvertObjectToString(cbx.SelectedValue);
+            string val = Fn.ConvertObjectToString(cbx.SelectedValue);
             if (val == cbxNullText)
             {
                 return null;
@@ -952,7 +952,7 @@ namespace RIFDC
             if (emptyValue != null)
             {
                 //здесь реализуем логику nullability: если в контроле содержится NullText, возвращаем Null 
-                string val = fn.ConvertObjectToString(emptyValue);
+                string val = Fn.ConvertObjectToString(emptyValue);
                 if (targetControl.Text == val) return null;
                 return targetControl.Text;
             }
@@ -965,7 +965,7 @@ namespace RIFDC
         {
             //здесь реализуем логику nullability: если в контрол приходит null, ставим nullText, и если в контроле содержится NullText, возвращаем Null 
 
-            string s= fn.ConvertObjectToString(emptyValue);
+            string s= Fn.ConvertObjectToString(emptyValue);
 
             if (s != "")
             {
@@ -975,12 +975,12 @@ namespace RIFDC
                 }
                 else
                 {
-                    targetControl.Text = fn.ConvertObjectToString(value);
+                    targetControl.Text = Fn.ConvertObjectToString(value);
                 }
             }
             else
             {
-                targetControl.Text = fn.ConvertObjectToString(value);
+                targetControl.Text = Fn.ConvertObjectToString(value);
             }
         }
 
@@ -1002,7 +1002,7 @@ namespace RIFDC
             Lib.FieldInfo f = t.fieldsInfo.getFieldInfoObjectByFieldClassName(srcFieldClassName);
             if (f == null)
             {
-                fn.Dp("Ошибка маппинга: не найден fieldInfo для поля " + srcFieldClassName);
+                Fn.Dp("Ошибка маппинга: не найден fieldInfo для поля " + srcFieldClassName);
                 return null;
             }
 

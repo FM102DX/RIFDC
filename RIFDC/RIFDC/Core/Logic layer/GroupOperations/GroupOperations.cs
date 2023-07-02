@@ -106,7 +106,7 @@ namespace RIFDC
             RemoveEventHandlerOfType("TextChanged", tbValue);
             RemoveEventHandlerOfType("Leave", tbValue);
 
-            dfc.addRecordBasedControlMapping(new RIFDC_TextBox(tbValue), fn.ConvertObjectToString(cbxSetValueParameter.SelectedValue));
+            dfc.addRecordBasedControlMapping(new RIFDC_TextBox(tbValue), Fn.ConvertObjectToString(cbxSetValueParameter.SelectedValue));
 
             keeper.clear();
             keeper.createNewObject_inserted();
@@ -134,7 +134,7 @@ namespace RIFDC
                 
                 if (eventFieldInfo==null)
                 {
-                    fn.Dp("Event not found:  "+ eventName);
+                    Fn.Dp("Event not found:  "+ eventName);
                     return;
                 }
                 //это проде как его значение, т.е. делегат
@@ -147,7 +147,7 @@ namespace RIFDC
         {
             get
             {
-                string s = fn.ConvertObjectToString(cbxSetValueParameter.SelectedValue.ToString());
+                string s = Fn.ConvertObjectToString(cbxSetValueParameter.SelectedValue.ToString());
 
                 if (s == "") return null;
 
@@ -176,7 +176,7 @@ namespace RIFDC
             if (fillEditControlsFlag) return;
             fillEditControlsFlag = true;
             doSelectWorkingField();
-            fn.Dp("selected field is "+ cbxSetValueParameter.SelectedValue.ToString());
+            Fn.Dp("selected field is "+ cbxSetValueParameter.SelectedValue.ToString());
             fillEditControlsFlag = false;
         }
 
@@ -222,9 +222,9 @@ namespace RIFDC
             }
 
             string rez = string.Format("Результат групповой операции:{0}{1}{2}", 
-                            string.Join(fn.Chr13, success), 
-                            fn.Chr13, 
-                            string.Join(fn.Chr13, errors));
+                            string.Join(Fn.Chr13, success), 
+                            Fn.Chr13, 
+                            string.Join(Fn.Chr13, errors));
 
             ServiceFucntions.mb_info(rez);
         }
@@ -259,13 +259,13 @@ namespace RIFDC
             if (vr.validationSuccess)
             {
                 //если leave валидация success, ставим возвращенное value и уходим с поля
-                tbValue.Text = fn.ConvertObjectToString(vr.validatedValue);
+                tbValue.Text = Fn.ConvertObjectToString(vr.validatedValue);
             }
             else
             {
                 //если leave валидация !success, возвращаем пользователя на поле, показываем сообщение
                 tbValue.Focus();
-                fn.MessageBoxInfo(vr.validationMsg);
+                Fn.MessageBoxInfo(vr.validationMsg);
                 return;
             }
 
@@ -280,13 +280,13 @@ namespace RIFDC
             if (vr.validationSuccess)
             {
                 //если leave валидация success, ставим возвращенное value и уходим с поля
-                tbValue.Text = fn.ConvertObjectToString(vr.validatedValue);
+                tbValue.Text = Fn.ConvertObjectToString(vr.validatedValue);
             }
             else
             {
                 //если leave валидация !success, возвращаем пользователя на поле, показываем сообщение
                 tbValue.Focus();
-                fn.MessageBoxInfo(vr.validationMsg);
+                Fn.MessageBoxInfo(vr.validationMsg);
                 return;
             }
             */
