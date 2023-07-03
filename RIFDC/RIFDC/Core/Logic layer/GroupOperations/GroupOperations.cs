@@ -201,17 +201,17 @@ namespace RIFDC
                         or1= startMsg.targetKeeper.saveItem(x);
                         if (or1.success)
                         {
-                            success.Add(string.Format("id={0}: {1}", x.id, "success"));
+                            success.Add(string.Format("id={0}: {1}", x.id, "Success"));
 
                         }
                         else
                         {
-                            errors.Add(string.Format("id={0}: error saving into db msg={1} ", x.id, or.msg));
+                            errors.Add(string.Format("id={0}: error saving into db Message={1} ", x.id, or.msg));
                         }
                     }
                     else
                     {
-                        errors.Add(string.Format("id={0}: error saving object msg={1} ", x.id, or.msg));
+                        errors.Add(string.Format("id={0}: error saving object Message={1} ", x.id, or.msg));
                     }
 
                 }
@@ -258,12 +258,12 @@ namespace RIFDC
             //и вот это я тащу аж из объекта
             if (vr.validationSuccess)
             {
-                //если leave валидация success, ставим возвращенное value и уходим с поля
+                //если leave валидация Success, ставим возвращенное value и уходим с поля
                 tbValue.Text = Fn.ConvertObjectToString(vr.validatedValue);
             }
             else
             {
-                //если leave валидация !success, возвращаем пользователя на поле, показываем сообщение
+                //если leave валидация !Success, возвращаем пользователя на поле, показываем сообщение
                 tbValue.Focus();
                 Fn.MessageBoxInfo(vr.validationMsg);
                 return;
@@ -279,12 +279,12 @@ namespace RIFDC
             //и вот это я тащу аж из объекта
             if (vr.validationSuccess)
             {
-                //если leave валидация success, ставим возвращенное value и уходим с поля
+                //если leave валидация Success, ставим возвращенное value и уходим с поля
                 tbValue.Text = Fn.ConvertObjectToString(vr.validatedValue);
             }
             else
             {
-                //если leave валидация !success, возвращаем пользователя на поле, показываем сообщение
+                //если leave валидация !Success, возвращаем пользователя на поле, показываем сообщение
                 tbValue.Focus();
                 Fn.MessageBoxInfo(vr.validationMsg);
                 return;

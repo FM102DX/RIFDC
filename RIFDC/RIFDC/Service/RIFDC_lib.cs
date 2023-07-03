@@ -746,30 +746,32 @@ namespace RIFDC
 
         public class DbOperationResult
         {
-            public bool success;
-            public int result;
-            public string msg;
-            public string createdObjectId;
-            public int rowsAffected;
-            public string returningColumnName = "";
-            public DateTime insertedDateTime;
-            public DateTime updatedDateTime;
+            public bool Success { get; set; }
+            public int Result { get; set; }
+            public string Message { get; set; }
+            public string CreatedObjectId { get; set; }
+            public int RowsAffected { get; set; }
+            public string ReturningColumnName { get; set; } = "";
+        
+            public DateTime InsertedDateTime { get; set; }
 
-            public static DbOperationResult getInstance(bool _success, string _msg, int _result = 0, string _createdObjectId = "", string _returningColumnName = "")
+            public DateTime UpdatedDateTime { get; set; }
+
+            public static DbOperationResult GetInstance(bool success, string msg, int result = 0, string createdObjectId = "", string returningColumnName = "")
             {
                 DbOperationResult d = new DbOperationResult
                 {
-                    success = _success,
-                    msg = _msg,
-                    result = _result,
-                    createdObjectId = _createdObjectId,
-                    returningColumnName = _returningColumnName,
+                    Success = success,
+                    Message = msg,
+                    Result = result,
+                    CreatedObjectId = createdObjectId,
+                    ReturningColumnName = returningColumnName,
 
                 };
                 return d;
             }
-            public static DbOperationResult sayOk(string _msg = "") { return getInstance(true, _msg); }
-            public static DbOperationResult sayNo(string _msg = "") { return getInstance(false, _msg); }
+            public static DbOperationResult SayOk(string message = "") { return GetInstance(true, message); }
+            public static DbOperationResult SayFail(string message = "") { return GetInstance(false, message); }
         }
 
         public class RelationsPackage

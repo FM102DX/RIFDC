@@ -257,16 +257,16 @@ namespace RIFDC
             try
             {
                 Lib.CommonOperationResult _tmp = myFile.open();
-                cr.msg = _tmp.msg;
+                cr.Message = _tmp.msg;
                 success = _tmp.success;
             }
             catch (Exception e)
             {
                 success = false;
-                cr.msg = e.Message;
+                cr.Message = e.Message;
             }
 
-            cr.success = success;
+            cr.Success = success;
             return cr;
         }
 
@@ -282,14 +282,14 @@ namespace RIFDC
 
         public Lib.DbOperationResult checkObjectTable(IKeepable t)
         {
-            return Lib.DbOperationResult.sayOk();
+            return Lib.DbOperationResult.SayOk();
         }
 
 
         public Lib.DbOperationResult deleteItem(IKeepable t)
         {
             //по отдельности объекты не удаляется
-            return Lib.DbOperationResult.sayOk();
+            return Lib.DbOperationResult.SayOk();
         }
 
         public Lib.DbOperationResult deleteItemById(IKeepable sample, string id)

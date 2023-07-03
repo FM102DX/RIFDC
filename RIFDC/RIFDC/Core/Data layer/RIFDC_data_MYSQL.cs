@@ -13,6 +13,7 @@ using RIFDC;
 using System.Diagnostics;
 using System.Globalization;
 using MySql.Data.Types;
+using static RIFDC.Lib;
 
 namespace RIFDC
 {
@@ -51,7 +52,7 @@ namespace RIFDC
 
             if (ourSide == null)
             {
-                return null; // Lib.ObjectOperationResult.sayNo("Relation doesnt fit object");
+                return null; // Lib.ObjectOperationResult.SayFail("Relation doesnt fit object");
             }
 
 
@@ -178,25 +179,28 @@ namespace RIFDC
 
         public Lib.DbOperationResult connect()
         {
-            Lib.DbOperationResult cr = new Lib.DbOperationResult();
+            Lib.DbOperationResult connectionResult = new Lib.DbOperationResult();
             MySqlConnection cnn = new MySqlConnection();
-
             cnn.ConnectionString = connectionString;
+            cnn.Open();
+            activeConnection = cnn;
 
+            return DbOperationResult.SayOk();
+            
+            /* 
             try
             {
-                cnn.Open();
-                activeConnection = cnn;
+
             }
             catch (Exception exception)
             {
-                cr.success = false;
-                cr.msg = exception.Message;
-                return cr;
+                connectionResult.Success = false;
+                connectionResult.Message = exception.Message;
+                return connectionResult;
             }
-            cr.success = true;
-
-            return cr;
+            connectionResult.Success = true;
+            return connectionResult;
+            */
         }
 
         public Lib.DbOperationResult reconnect()
@@ -235,11 +239,11 @@ namespace RIFDC
 
             if (rez > 0)
             {
-                return Lib.DbOperationResult.sayOk("");
+                return Lib.DbOperationResult.SayOk("");
             }
             else
             {
-                return Lib.DbOperationResult.sayNo(errStr);
+                return Lib.DbOperationResult.SayFail(errStr);
             }
 
 
@@ -259,12 +263,12 @@ namespace RIFDC
 
             if (t == null)
             {
-                return Lib.DbOperationResult.sayNo("Target Object is null");
+                return Lib.DbOperationResult.SayFail("Target Object is null");
             }
 
             if (Fn.ConvertObjectToString(t.id) == "")
             {
-                return Lib.DbOperationResult.sayNo("Target Object Id is null");
+                return Lib.DbOperationResult.SayFail("Target Object Id is null");
             }
 
             //TODO стоп, а если там цепочка удалений?
@@ -288,11 +292,11 @@ namespace RIFDC
 
             if (rez > 0)
             {
-                return Lib.DbOperationResult.sayOk("");
+                return Lib.DbOperationResult.SayOk("");
             }
             else
             {
-                return Lib.DbOperationResult.sayNo(errStr);
+                return Lib.DbOperationResult.SayFail(errStr);
             }
         }
 
@@ -354,15 +358,15 @@ namespace RIFDC
                 if (!success)
                 {
                     //исчерпаны попытки вставки данных
-                    _r = Lib.DbOperationResult.sayNo("Unable to insert new record after 10 efforts");
-                    _r.insertedDateTime = dateTimeOfCreation;
+                    _r = Lib.DbOperationResult.SayFail("Unable to insert new record after 10 efforts");
+                    _r.InsertedDateTime = dateTimeOfCreation;
                     return _r;
                 }
                 else
                 {
                     //успешано
-                    Lib.DbOperationResult x = Lib.DbOperationResult.sayOk("");
-                    x.createdObjectId = t.id;
+                    Lib.DbOperationResult x = Lib.DbOperationResult.SayOk("");
+                    x.CreatedObjectId = t.id;
                     return x;
                 }
 
@@ -378,7 +382,7 @@ namespace RIFDC
 
                 if (commStr == "")
                 {
-                    return Lib.DbOperationResult.sayOk("Nothing to update");
+                    return Lib.DbOperationResult.SayOk("Nothing to update");
                 }
 
                 Logger.log("DB", "EXECUTING QUERY: " + commStr);
@@ -389,15 +393,15 @@ namespace RIFDC
                     rez = com.ExecuteNonQuery();
                     Logger.log("DB", "RESULT IS: " + rez.ToString());
 
-                    _r = Lib.DbOperationResult.sayOk();
-                    _r.updatedDateTime = dateTimeOfUpdate;
+                    _r = Lib.DbOperationResult.SayOk();
+                    _r.UpdatedDateTime = dateTimeOfUpdate;
                     return _r;
                 }
                 catch (Exception e)
                 {
                     errText = "RESULT IS: ERRROR: " + e.Message;
                     Logger.log("DB", errText);
-                    return Lib.DbOperationResult.sayNo(errText);
+                    return Lib.DbOperationResult.SayFail(errText);
                 }
             }
         }
@@ -993,7 +997,7 @@ namespace RIFDC
                 if (dbHasTableName(tableName))
                 {
                     //таблица есть значит ок
-                    return Lib.DbOperationResult.getInstance(true, "", 0);
+                    return Lib.DbOperationResult.GetInstance(true, "", 0);
                 }
                 else
                 {
@@ -1014,18 +1018,18 @@ namespace RIFDC
                             //не удалось создать
                             err = "RIFDC: Ошибка БД - невозможно содать таблицу";
                             Logger.log("DB", err);
-                            return Lib.DbOperationResult.getInstance(false, err);
+                            return Lib.DbOperationResult.GetInstance(false, err);
                         }
                         else
                         {
                             //удалось создать, все ок
-                            return Lib.DbOperationResult.getInstance(true, "");
+                            return Lib.DbOperationResult.GetInstance(true, "");
                         }
                     }
                     catch (Exception e)
                     {
                         //не удалось создать - ошибка при попытке создать
-                        return Lib.DbOperationResult.getInstance(false, e.Message);
+                        return Lib.DbOperationResult.GetInstance(false, e.Message);
                     }
                 }
             }
@@ -1046,12 +1050,12 @@ namespace RIFDC
                 DataTable dt = myDataTable;
                 if (dt == null)
                 {
-                    return Lib.DbOperationResult.getInstance(false, "ERROR trying to get DataTable object on " + tableName);
+                    return Lib.DbOperationResult.GetInstance(false, "ERROR trying to get DataTable object on " + tableName);
                 }
 
                 Lib.DbOperationResult rez0 = tableHasColumn(dt, fieldDbName, likeTypeCompare);
 
-                flag = rez0.success;
+                flag = rez0.Success;
 
                 if (!attemptToCreate) return rez0;
 
@@ -1118,7 +1122,7 @@ namespace RIFDC
                     }
                     catch (Exception e)
                     {
-                        return Lib.DbOperationResult.getInstance(false, e.Message);
+                        return Lib.DbOperationResult.GetInstance(false, e.Message);
                     }
 
                     //проверяем еще раз, точно ли создана колонка, и этот результат возвращаем
@@ -1126,7 +1130,7 @@ namespace RIFDC
                     return checkTableColumnExistence(fieldDbName, f, tag, attemptToCreate);
 
                 } // if (!flag)
-                return Lib.DbOperationResult.getInstance(true, "");
+                return Lib.DbOperationResult.GetInstance(true, "");
             }
 
             public Lib.DbOperationResult checkTable()
@@ -1138,7 +1142,7 @@ namespace RIFDC
 
                 //проверяем, есть ли там tableName  в базе, если нет - создать
                 rte = checkTableExistence();
-                if (!rte.success) return rte;
+                if (!rte.Success) return rte;
 
                 #endregion
 
@@ -1148,7 +1152,7 @@ namespace RIFDC
                 #region checking fields
 
                 rte = checkTableColumnExistence("id", null, " VARCHAR(30) PRIMARY KEY ");  // " VARCHAR(20) NOT NULL UNIQUE ");
-                if (!rte.success) { return rte; }
+                if (!rte.Success) { return rte; }
 
                 //последовательно проверяем поля, и если поля нет, то добавляем
 
@@ -1157,12 +1161,12 @@ namespace RIFDC
                     if (f.parameterSignificanceInfo.significanceType != Lib.ParameterSignificanceInfo.ParameterSignificanceTypeEnum.Solid) continue;
                     if (f.fieldDbName.ToLower() == "id") continue;
                     rte = checkTableColumnExistence(f.fieldDbName, f, "");
-                    if (!rte.success) { return rte; }
+                    if (!rte.Success) { return rte; }
                 }
 
                 #endregion
 
-                return Lib.DbOperationResult.getInstance(true, "Common table check success");
+                return Lib.DbOperationResult.GetInstance(true, "Common table check Success");
             }
 
 
@@ -1179,10 +1183,10 @@ namespace RIFDC
                     equal = likeTypeCompare ? a.Contains(b) : a == b;
                     if (equal)
                     {
-                        return Lib.DbOperationResult.getInstance(true, "", 0, "", a);
+                        return Lib.DbOperationResult.GetInstance(true, "", 0, "", a);
                     }
                 }
-                return Lib.DbOperationResult.getInstance(false, "");
+                return Lib.DbOperationResult.GetInstance(false, "");
             }
 
             private bool dbHasTableName(string tableName)
@@ -1200,6 +1204,7 @@ namespace RIFDC
                 //получаем список таблиц БД
 
                 List<string> rez = new List<string>();
+
                 if (activeConnection != null)
                 {
                     DataTable dbTables = activeConnection.GetSchema("Tables"); //список всех таблиц
@@ -1213,6 +1218,7 @@ namespace RIFDC
             }
         }
     }
+
     public class MySqlCluster_MySqlConnectorNET : MySqlClusterPattern, IDataCluster
     {
         public new ConnectionData connectionData { get; set; }
@@ -1224,12 +1230,12 @@ namespace RIFDC
                 string server = Fn.SubstituteStringBeginEnd(connectionData.server, "server=", $";");
                 string port = Fn.SubstituteStringBeginEnd(connectionData.port, "port=", ";");
                 string dbName = Fn.SubstituteStringBeginEnd(connectionData.dbName, "database=", ";");
-                string dbUser = Fn.SubstituteStringBeginEnd(connectionData.dbUser, "user=", ";");
-                string dbPassword = Fn.SubstituteStringBeginEnd(connectionData.dbPassword, "password=", ";");
-                string persistSecurityInfo = Fn.SubstituteStringBeginEnd(connectionData.persistSecurityInfo, "persist Security Info=", ";");
-                string pooling = Fn.SubstituteStringBeginEnd(connectionData.pooling, "pooling=", ";");
-                string useCompression = Fn.SubstituteStringBeginEnd(connectionData.useCompression, "use Compression=", ";");
-                string charSet = "CHARSET = utf8;";
+                string dbUser = Fn.SubstituteStringBeginEnd(connectionData.dbUser, "Uid=", ";");
+                string dbPassword = Fn.SubstituteStringBeginEnd(connectionData.dbPassword, "Pwd=", ";");
+                string persistSecurityInfo = ""; // Fn.SubstituteStringBeginEnd(connectionData.persistSecurityInfo, "persist Security Info=", ";");
+                string pooling = "";  Fn.SubstituteStringBeginEnd(connectionData.pooling, "pooling=", ";");
+                string useCompression = "";  Fn.SubstituteStringBeginEnd(connectionData.useCompression, "use Compression=", ";");
+                string charSet = "CharSet=utf8mb4;";
                 return server + port + dbName + dbUser + dbPassword + persistSecurityInfo + pooling + useCompression+ charSet;
             }
         }

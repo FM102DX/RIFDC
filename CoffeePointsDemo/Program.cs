@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using RIFDC;
 using CommonFunctions;
 using MySql.Data.MySqlClient;
+using static RIFDC.Lib;
 
 namespace CoffeePointsDemo
 {
@@ -43,7 +44,9 @@ namespace CoffeePointsDemo
 
             RIFDC_App.mainDataRoom = mainDataRoom;
             RIFDC_App.currentUserId = "user01";
+
             
+
             #region localCnn
 
             /*
@@ -61,7 +64,7 @@ namespace CoffeePointsDemo
 
             Lib.DbOperationResult or = mainDataRoom.connect();
 
-            if (!or.success)
+            if (!or.Success)
             {
                 ServiceFucntions.mb_info("Ошибка подключения, программа остановлена");
                 return;

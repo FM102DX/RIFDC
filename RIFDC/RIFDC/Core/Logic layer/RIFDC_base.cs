@@ -633,7 +633,7 @@ namespace RIFDC
             {
                 // 27.03.2021 новая система id, теперь каждый старт ItemKeeper сопровождается чтением таблицы из БД и получением dbprefix
                 Lib.DbOperationResult rte = checkMyTable();
-                if (!rte.success) return;
+                if (!rte.Success) return;
             }
 
         }
@@ -718,12 +718,12 @@ namespace RIFDC
                 Lib.DbOperationResult dbr = dataRoom.saveObject(t);
 
                 //здесь их уже нет, значит, надо сохранить
-                if (dbr.success & isItItemUpdate & t.needToSaveMyHistory)
+                if (dbr.Success & isItItemUpdate & t.needToSaveMyHistory)
                 {
                     if (alt != null)
                     {
                         //сохранить историю
-                        alt.alterationDateTimePoint = dbr.updatedDateTime;
+                        alt.alterationDateTimePoint = dbr.UpdatedDateTime;
                         alt.id = Fn.ConvertObjectToString(t.getMyParameter("id"));
                         Lib.ObjectOperationResult opr = HistorySaver.getInstance(dataRoom).doSaveHistory(alt);
                         if (!opr.success)
@@ -740,7 +740,7 @@ namespace RIFDC
 
                 t.saveMyPhoto();
 
-                return Lib.ObjectOperationResult.getInstance(dbr.success, dbr.msg, dbr.createdObjectId);
+                return Lib.ObjectOperationResult.getInstance(dbr.Success, dbr.Message, dbr.CreatedObjectId);
             }
         }
 
@@ -772,14 +772,14 @@ namespace RIFDC
 
                 Lib.DbOperationResult dbr = dataRoom.deleteItem(t);
 
-                if (dbr.success)
+                if (dbr.Success)
                 {
                     removeItem_from_collection(t.id);
                     return Lib.ObjectOperationResult.sayOk();
                 }
                 else
                 {
-                    return Lib.ObjectOperationResult.getInstance(false, dbr.msg);
+                    return Lib.ObjectOperationResult.getInstance(false, dbr.Message);
                 }
             }
         }
@@ -844,13 +844,13 @@ namespace RIFDC
             //todo тут тоже надо вписать правила удаления
             Lib.DbOperationResult dbr = dataRoom.deleteFiteredPackege(sampleObject, filter);
 
-            if (dbr.success)
+            if (dbr.Success)
             {
                 return Lib.ObjectOperationResult.sayOk();
             }
             else
             {
-                return Lib.ObjectOperationResult.sayNo(dbr.msg);
+                return Lib.ObjectOperationResult.sayNo(dbr.Message);
             }
         }
 
