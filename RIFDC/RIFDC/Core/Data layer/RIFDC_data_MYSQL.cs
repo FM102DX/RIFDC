@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Text;
-using CommonFunctions;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -14,6 +13,7 @@ using System.Diagnostics;
 using System.Globalization;
 using MySql.Data.Types;
 using static RIFDC.Lib;
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {

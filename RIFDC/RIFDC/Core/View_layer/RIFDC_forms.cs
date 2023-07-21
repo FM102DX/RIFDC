@@ -1,9 +1,9 @@
-﻿using CommonFunctions;
-using ObjectParameterEngine;
+﻿using ObjectParameterEngine;
 using StateMachineNamespace;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {
@@ -441,7 +441,7 @@ namespace RIFDC
 
             if (selectedItemsIds.Count==0 && this.multiSelectionMode==true)
             {
-                ServiceFucntions.mb_info("Элементы не выбраны");
+                WindowsServiceFucntions.mb_info("Элементы не выбраны");
                 return;
             }
 
@@ -592,7 +592,7 @@ namespace RIFDC
                 Lib.EventProcessigResult r0 = saveRecord(c);
                 if (!r0.success)
                 {
-                    ServiceFucntions.mb_info(r0.msg);
+                    WindowsServiceFucntions.mb_info(r0.msg);
 
                     //теперь еще надо не дать уйти с поля
                     c.Focus();
@@ -623,7 +623,7 @@ namespace RIFDC
                 if (!r.success)
                 {
 
-                    ServiceFucntions.mb_info(r.msg);
+                    WindowsServiceFucntions.mb_info(r.msg);
                     tbb.targetControl.Focus(); //не дать уйти с поля
                     tbb.targetControl.selectionStart = Fn.ConvertObjectToString(tbb.getTargetControlValue()).Length;
                 }
@@ -708,7 +708,7 @@ namespace RIFDC
                     {
                         //если leave валидация !Success, возвращаем пользователя на поле, показываем сообщение
                         tb.Focus();
-                        ServiceFucntions.mb_info(vr.validationMsg);
+                        WindowsServiceFucntions.mb_info(vr.validationMsg);
                     }
                     rez = vr.validationSuccess;
                 }
@@ -1081,7 +1081,7 @@ namespace RIFDC
 
                                 if (parent.multiSelectionMode)
                                 {
-                                    b = ServiceFucntions.mb_confirmAction("Удалить выделенные записи?");
+                                    b = WindowsServiceFucntions.mb_confirmAction("Удалить выделенные записи?");
                                     
                                     if (!b) return;
 
@@ -1096,7 +1096,7 @@ namespace RIFDC
                                 else
                                 {
 
-                                    b = ServiceFucntions.mb_confirmAction("Удалить?");
+                                    b = WindowsServiceFucntions.mb_confirmAction("Удалить?");
 
                                     if (!b) return;
 
@@ -1494,7 +1494,7 @@ namespace RIFDC
 
                                 //удалить запись
 
-                                bool b = ServiceFucntions.mb_confirmAction("Удалить?");
+                                bool b = WindowsServiceFucntions.mb_confirmAction("Удалить?");
 
                                 if (!b) return;
 

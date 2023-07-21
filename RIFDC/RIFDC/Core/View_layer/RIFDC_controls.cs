@@ -9,9 +9,9 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using CommonFunctions;
 using RIFDC;
 using System.Drawing;
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {
@@ -30,7 +30,7 @@ namespace RIFDC
      * */
 
 
-    
+
 
     public interface IDFCSearchControl
     {

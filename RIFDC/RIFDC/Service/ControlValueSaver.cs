@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using CommonFunctions;
 using System.IO;
-
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {

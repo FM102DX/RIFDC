@@ -9,12 +9,11 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using CommonFunctions;
 using RIFDC;
 using System.Collections;
 using System.Text.RegularExpressions;
 using System.IO;
-
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {
@@ -766,7 +765,7 @@ namespace RIFDC
                 Lib.ObjectOperationResult _rez = canDeleteItem(t);
                 if (!_rez.success)
                 {
-                    if(!silent) ServiceFucntions.mb_info(_rez.msg);
+                    if(!silent) WindowsServiceFucntions.mb_info(_rez.msg);
                     return Lib.ObjectOperationResult.sayNo(_rez.msg);
                 }
 

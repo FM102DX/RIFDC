@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CommonFunctions;
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {
@@ -168,7 +168,7 @@ namespace RIFDC
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ServiceFucntions.mb_info(string.Join(" ", items.Select(x => x.id).ToList()));
+            WindowsServiceFucntions.mb_info(string.Join(" ", items.Select(x => x.id).ToList()));
         }
 
         private void cbxSetValueParameter_SelectedIndexChanged(object sender, EventArgs e)
@@ -226,7 +226,7 @@ namespace RIFDC
                             Fn.Chr13, 
                             string.Join(Fn.Chr13, errors));
 
-            ServiceFucntions.mb_info(rez);
+            WindowsServiceFucntions.mb_info(rez);
         }
 
 

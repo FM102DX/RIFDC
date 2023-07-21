@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using RIFDC;
-using CommonFunctions;
+
 using MySql.Data.MySqlClient;
 using static RIFDC.Lib;
 
@@ -66,7 +66,7 @@ namespace CoffeePointsDemo
 
             if (!or.Success)
             {
-                ServiceFucntions.mb_info("Ошибка подключения, программа остановлена");
+                WindowsServiceFucntions.mb_info("Ошибка подключения, программа остановлена");
                 return;
             }
 

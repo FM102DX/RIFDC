@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CommonFunctions;
+
 
 namespace RIFDC
 {
@@ -58,7 +58,7 @@ namespace RIFDC
             //отмена посденей операции
             if (HistoryManagerDFC.dataSource.count == 0) return;
 
-            if (!ServiceFucntions.mb_confirmAction("Отменить последнюю операцию?")) return;
+            if (!WindowsServiceFucntions.mb_confirmAction("Отменить последнюю операцию?")) return;
             
             IKeepable _hsUnit = HistoryManagerDFC.currentRecord.getMember();
 
@@ -83,7 +83,7 @@ namespace RIFDC
         private void btnDeleteHistory_Click(object sender, EventArgs e)
         {
             if (HistoryManagerDFC.dataSource.count == 0) return;
-            if (!ServiceFucntions.mb_confirmAction("Очистить историю?")) return;
+            if (!WindowsServiceFucntions.mb_confirmAction("Очистить историю?")) return;
             HistoryManagerDFC.dataSource.deleteFiteredPackege(HistoryManagerDFC.dataSource.filtration.myActualGlobalFilter);
         }
 
