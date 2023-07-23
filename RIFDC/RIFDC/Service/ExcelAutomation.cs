@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
-using RICOMPANY.CommonFunctions;
 using RIFDC;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security;
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {
@@ -45,7 +45,7 @@ namespace RIFDC
             {
                 foreach (Excel.Worksheet ws in _wb.Worksheets)
                 {
-                    fn.dp(ws.Name.ToLower());
+                    Fn.Dp(ws.Name.ToLower());
                     if (ws.Name.ToLower() == name.ToLower())
                     {
                           return ws;
@@ -417,9 +417,9 @@ namespace RIFDC
                 s = "";
                 for (j = 0; j < columnCount_1; j++)
                 {
-                    s += fn.toStringNullConvertion(_dataArray[i, j]);
+                    s += Fn.ConvertObjectToString(_dataArray[i, j]);
                 }
-                fn.dp(s);
+                Fn.Dp(s);
             }
         }
 
@@ -731,7 +731,7 @@ namespace RIFDC
             }
             catch (Exception e)
             {
-                fn.dp("ERROR EXCEL " + e.Message);
+                Fn.Dp("ERROR EXCEL " + e.Message);
             }
             return null;
 

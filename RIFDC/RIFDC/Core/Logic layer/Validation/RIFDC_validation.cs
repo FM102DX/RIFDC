@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using RICOMPANY.CommonFunctions;
+
 using System.Text.RegularExpressions;
 
 namespace RIFDC

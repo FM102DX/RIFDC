@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using RICOMPANY.CommonFunctions;
 using System.IO;
-
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {
@@ -116,7 +115,7 @@ namespace RIFDC
                     _arr = s.Split('=');
                     setCtrlValue(_arr[0], _arr[1]);
 
-                    fn.dp(_arr[0] + "=" + _arr[1]);
+                    Fn.Dp(_arr[0] + "=" + _arr[1]);
                 }
 
             }

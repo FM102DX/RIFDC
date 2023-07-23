@@ -9,10 +9,11 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using RICOMPANY.CommonFunctions;
-using RIFDC;using System.Collections;
+using RIFDC;
+using System.Collections;
 using System.Text.RegularExpressions;
 using System.IO;
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {
@@ -83,7 +84,7 @@ namespace RIFDC
         }
         public static void log(object domain, object text)
         {
-            string s = Convert.ToString(domain).ToUpper() + "_" + fn.toStringNullConvertion(text);
+            string s = Convert.ToString(domain).ToUpper() + "_" + Fn.ConvertObjectToString(text);
             if (logIsOn)
             {
                 switch (logDirection)
@@ -92,11 +93,11 @@ namespace RIFDC
                         writeToFile(s);
                         break;
                     case logDirectionEnum.toConsole:
-                        fn.dp(s);
+                        Fn.Dp(s);
                         break;
                     case logDirectionEnum.bothToConAndFile:
                         writeToFile(s);
-                        fn.dp(s);
+                        Fn.Dp(s);
                         break;
 
 
@@ -284,7 +285,7 @@ namespace RIFDC
                 msg.args = args;
                 if (!msg.isCorrect())
                 {
-                    fn.dp("OBJECT MESSENGER ERROR - неверный формат объектного сообщения");
+                    Fn.Dp("OBJECT MESSENGER ERROR - неверный формат объектного сообщения");
                     return;
                 }
 
@@ -338,7 +339,7 @@ namespace RIFDC
             }
             else
             {
-                fn.dp("ERROR creation dependency: objects don't fit relation");
+                Fn.Dp("ERROR creation dependency: objects don't fit relation");
                 return null;
             }
         }

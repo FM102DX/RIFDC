@@ -9,12 +9,10 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using RICOMPANY.CommonFunctions;
 using RIFDC;
 using System.Text.RegularExpressions;
 using System.Drawing;
-
-//сервисные классы 123 456 
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {
@@ -39,11 +37,11 @@ namespace RIFDC
                 string tmp;
                 foreach (LinePaintingRule r in items)
                 {
-                    tmp = fn.toStringNullConvertion(x.getMyParameter(r.fieldClassName));
-                    //fn.dp(string.Format("GETTING COLOR: parameter={0}, value={1}, returned color={2}", r.fieldClassName, tmp, ""));
+                    tmp = Fn.ConvertObjectToString(x.getMyParameter(r.fieldClassName));
+                    //Fn.Dp(string.Format("GETTING COLOR: parameter={0}, value={1}, returned color={2}", r.fieldClassName, tmp, ""));
                     if (tmp == r.fieldValue)
                     {
-                        //fn.dp("Returning color = " + r.colorCode.ToString());
+                        //Fn.Dp("Returning color = " + r.colorCode.ToString());
                         return r.colorCode;
                     }
                 }
@@ -60,8 +58,8 @@ namespace RIFDC
 
         public static void IKeepableListSimpleDump(List<IKeepable> lst, string msg ="")
         {
-            if (msg != "") fn.dp(msg);
-            lst.ForEach(x=> { fn.dp(string.Format("id={0} name={1}", x.id, x.displayName)); });
+            if (msg != "") Fn.Dp(msg);
+            lst.ForEach(x=> { Fn.Dp(string.Format("id={0} name={1}", x.id, x.displayName)); });
         }
 
         public interface IControlFormat
@@ -115,11 +113,11 @@ namespace RIFDC
 
             foreach (IUniversalRowDataContainer x in rowList)
             {
-                val0 = fn.toStringNullConvertion(x.getValueByName(searchFieldName));
+                val0 = Fn.ConvertObjectToString(x.getValueByName(searchFieldName));
 
                 if (val0== searchValue)
                 {
-                    val = fn.toStringNullConvertion(x.getValueByName(valueFieldName));
+                    val = Fn.ConvertObjectToString(x.getValueByName(valueFieldName));
                     return val;
                 }
             }
@@ -134,7 +132,7 @@ namespace RIFDC
             {
                 foreach (DataElement x in items)
                 {
-                    //fn.dp(string.Format("name={0} x.name={1}", name, x.name));
+                    //Fn.Dp(string.Format("name={0} x.name={1}", name, x.name));
                     if (x.name.ToLower() == name.ToLower()) 
                     {
                         return x.value; 
@@ -196,7 +194,7 @@ namespace RIFDC
         public static CommonOperationResult convertedObjectRIFDCTypes(FieldTypeEnum typeVar, object value)
         {
             //возвращает object - обертку исходя из того, какой тип передан в typeStr
-            //это обертка над fn.convertedObject
+            //это обертка над Fn.ConvertedObject
 
             string s;
             switch (typeVar)
@@ -228,7 +226,7 @@ namespace RIFDC
                     break;
             }
 
-            fn.CommonOperationResult rez= fn.convertedObject(s, value);
+            Fn.CommonOperationResult rez= Fn.ConvertedObject(s, value);
             if (rez.success)
             {
                 return CommonOperationResult.returnValue(rez.returningValue);
@@ -274,9 +272,9 @@ namespace RIFDC
                     bool ex;
                     foreach (Relations.RelationsChain.RelationsChainElement x0 in rez0)
                     {
-                       // fn.dp(x0.ToString());
+                       // Fn.Dp(x0.ToString());
                         ex = rez.Exists(x => x.Equals(x,x0));
-                      //  fn.dp("EX="+ex.ToString());
+                      //  Fn.Dp("EX="+ex.ToString());
                         if (!ex) rez.Add(x0);
                     }
                     return rez;
@@ -385,7 +383,7 @@ namespace RIFDC
                     /*
                                         if (f.allowNull && f.defaultValue == null)
                                         {
-                                                fn.dp("Class with tableName= "+tableName+" validation error at " + f.fieldClassName + ": defaultValue is required for nullable fields");
+                                                Fn.Dp("Class with tableName= "+tableName+" validation error at " + f.fieldClassName + ": defaultValue is required for nullable fields");
                                                 return false;
                                         }
 
@@ -394,7 +392,7 @@ namespace RIFDC
                     // 2) если это bool, он не может быть null
                     if (f.fieldType == FieldTypeEnum.Bool && f.nullabilityInfo.allowNull == true)
                     {
-                        fn.dp("Class with tableName= " + tableName + " validation error at " + f.fieldClassName + ": bool fields can't allow null");
+                        Fn.Dp("Class with tableName= " + tableName + " validation error at " + f.fieldClassName + ": bool fields can't allow null");
                         return false;
                     }
                     // 3) что такое поле реально есть в объекте
@@ -402,10 +400,10 @@ namespace RIFDC
                 }
 
                 // 4) если поле с таким className уже есть в коллекции, т.е. чтобы не было дубликатов
-                string duplicates = fn.stringListDuplicates(s);
+                string duplicates = Fn.StringListDuplicates(s);
                 if (duplicates != "")
                 {
-                    fn.dp("Class with tableName= " + tableName + " validation error: Duplicates in parameter declaration: " + duplicates);
+                    Fn.Dp("Class with tableName= " + tableName + " validation error: Duplicates in parameter declaration: " + duplicates);
                     return false;
                 }
                 return true;
@@ -620,7 +618,7 @@ namespace RIFDC
             {
                 get
                 {
-                    if (!fn.listIsNullOrEmpty(rules))
+                    if (!Fn.ListIsNullOrEmpty(rules))
                     {
                         if (rules.Count > 0)
                         {
@@ -746,30 +744,32 @@ namespace RIFDC
 
         public class DbOperationResult
         {
-            public bool success;
-            public int result;
-            public string msg;
-            public string createdObjectId;
-            public int rowsAffected;
-            public string returningColumnName = "";
-            public DateTime insertedDateTime;
-            public DateTime updatedDateTime;
+            public bool Success { get; set; }
+            public int Result { get; set; }
+            public string Message { get; set; }
+            public string CreatedObjectId { get; set; }
+            public int RowsAffected { get; set; }
+            public string ReturningColumnName { get; set; } = "";
+        
+            public DateTime InsertedDateTime { get; set; }
 
-            public static DbOperationResult getInstance(bool _success, string _msg, int _result = 0, string _createdObjectId = "", string _returningColumnName = "")
+            public DateTime UpdatedDateTime { get; set; }
+
+            public static DbOperationResult GetInstance(bool success, string msg, int result = 0, string createdObjectId = "", string returningColumnName = "")
             {
                 DbOperationResult d = new DbOperationResult
                 {
-                    success = _success,
-                    msg = _msg,
-                    result = _result,
-                    createdObjectId = _createdObjectId,
-                    returningColumnName = _returningColumnName,
+                    Success = success,
+                    Message = msg,
+                    Result = result,
+                    CreatedObjectId = createdObjectId,
+                    ReturningColumnName = returningColumnName,
 
                 };
                 return d;
             }
-            public static DbOperationResult sayOk(string _msg = "") { return getInstance(true, _msg); }
-            public static DbOperationResult sayNo(string _msg = "") { return getInstance(false, _msg); }
+            public static DbOperationResult SayOk(string message = "") { return GetInstance(true, message); }
+            public static DbOperationResult SayFail(string message = "") { return GetInstance(false, message); }
         }
 
         public class RelationsPackage
@@ -1011,7 +1011,7 @@ namespace RIFDC
                 else
                 {
                     //TODO более сложная обработка исключений
-                    ServiceFucntions.mb_info("Созданное правило фильтрации не было добавлено: " + fvr.validationMsg);
+                    WindowsServiceFucntions.mb_info("Созданное правило фильтрации не было добавлено: " + fvr.validationMsg);
                 }
             }
 
@@ -1039,7 +1039,7 @@ namespace RIFDC
                 //но если оно присвоено не было, то возвращаем автосгенерированное
                 get
                 {
-                    if (fn.toStringNullConvertion(_customFilteringExpression) == "")
+                    if (Fn.ConvertObjectToString(_customFilteringExpression) == "")
                     {
                            return  generateDefaultFilteringExpression();
                     }
@@ -1053,7 +1053,7 @@ namespace RIFDC
                 {
                     if (!filteringExpressionIsValid(value))
                     {
-                        ServiceFucntions.mb_info("В объект Filter передано некорректное filtering expression: " + value);
+                        WindowsServiceFucntions.mb_info("В объект Filter передано некорректное filtering expression: " + value);
                         //_filteringExpression = "";
                     }
                     else
@@ -1261,15 +1261,15 @@ namespace RIFDC
                 //соединить по OR где FilteringRuleTypeEnum.ORTypeMultiselectFilteringRule
                 fromORTypeMultiselect = concatFilteringExpr(FilteringRuleTypeEnum.ORTypeMultiselectFilteringRule, "OR");
 
-                fn.stringByExpressionMerger mg = new fn.stringByExpressionMerger(" AND ");
+                Fn.StringByExpressionMerger mg = new Fn.StringByExpressionMerger(" AND ");
 
-                mg.addElement(fromParentFormExpr);
-                mg.addElement(fromDomesticDFCExpr);
-                mg.addElement(fromNotSpecifiedExpr);
-                mg.addElement(fromORTypeMultiselect);
-                mg.addElement(fromORTypeSearch);
+                mg.AddElement(fromParentFormExpr);
+                mg.AddElement(fromDomesticDFCExpr);
+                mg.AddElement(fromNotSpecifiedExpr);
+                mg.AddElement(fromORTypeMultiselect);
+                mg.AddElement(fromORTypeSearch);
 
-                return mg.result;
+                return mg.Result;
 
                 //return string.Join(" AND ", new List<string>() { fromParentFormExpr, fromDomesticDFCExpr, fromNotSpecifiedExpr, fromORTypeMultiselect, fromORTypeSearch })
             }

@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace RIFDC
 {
-   public static class ServiceFucntions
+   public static class WindowsServiceFucntions
     {
         // messageboxses
         public static void mb_info(string txt)

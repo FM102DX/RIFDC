@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
-using RICOMPANY.CommonFunctions;
+using RIFDC.RIFDC.Service;
 
 namespace ObjectParameterEngine
 {
@@ -22,7 +22,7 @@ namespace ObjectParameterEngine
             FieldInfo[] newObjectFields = x.GetType().GetFields();
             PropertyInfo[] newObjectProperties = x.GetType().GetProperties();
 
-            fn.CommonOperationResult convRez;
+            Fn.CommonOperationResult convRez;
 
             foreach (FieldInfo f0 in newObjectFields)
             {
@@ -30,7 +30,7 @@ namespace ObjectParameterEngine
                 {
                     try
                     {
-                        convRez = fn.convertedObject(f0.FieldType.ToString(), value); //чтобы внутри object было значение нужно типа
+                        convRez = Fn.ConvertedObject(f0.FieldType.ToString(), value); //чтобы внутри object было значение нужно типа
                         if (convRez.success)
                         {
                             f0.SetValue(x, convRez.returningValue);
@@ -55,7 +55,7 @@ namespace ObjectParameterEngine
                     if (isItOnlyGetter(x, name)) return ObjectParameterOperationResult.sayOk();
                     try
                     {
-                        convRez = fn.convertedObject(f1.GetType().ToString(), value);
+                        convRez = Fn.ConvertedObject(f1.GetType().ToString(), value);
                         if (convRez.success)
                         {
                             f1.SetValue(x, convRez.returningValue);

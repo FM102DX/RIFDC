@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Text;
-using RICOMPANY.CommonFunctions;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -12,6 +11,7 @@ using ObjectParameterEngine;
 using RIFDC;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Diagnostics;
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {
@@ -143,7 +143,7 @@ namespace RIFDC
                 progress = Convert.ToInt32(_progress);
             }
 
-            status = fn.list2str(timeArr.Cast<Object>().ToList());
+            status = Fn.Lst2str(timeArr.Cast<Object>().ToList());
         }
         public void addBatchProcessorUnit(string _path, string _wbName, string _wsName, string _startAddRess, string _endAddRess, long _drrShift)
         {
@@ -257,16 +257,16 @@ namespace RIFDC
             try
             {
                 Lib.CommonOperationResult _tmp = myFile.open();
-                cr.msg = _tmp.msg;
+                cr.Message = _tmp.msg;
                 success = _tmp.success;
             }
             catch (Exception e)
             {
                 success = false;
-                cr.msg = e.Message;
+                cr.Message = e.Message;
             }
 
-            cr.success = success;
+            cr.Success = success;
             return cr;
         }
 
@@ -282,14 +282,14 @@ namespace RIFDC
 
         public Lib.DbOperationResult checkObjectTable(IKeepable t)
         {
-            return Lib.DbOperationResult.sayOk();
+            return Lib.DbOperationResult.SayOk();
         }
 
 
         public Lib.DbOperationResult deleteItem(IKeepable t)
         {
             //по отдельности объекты не удаляется
-            return Lib.DbOperationResult.sayOk();
+            return Lib.DbOperationResult.SayOk();
         }
 
         public Lib.DbOperationResult deleteItemById(IKeepable sample, string id)

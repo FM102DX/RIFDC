@@ -9,12 +9,11 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using RICOMPANY.CommonFunctions;
 using RIFDC;
 using System.Collections;
 using System.Text.RegularExpressions;
 using System.IO;
-
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {
@@ -322,7 +321,7 @@ namespace RIFDC
 
             Lib.Filter filter = new Lib.Filter();
 
-            string _val = fn.toStringNullConvertion(getMyParameter(mylSide.fieldName));
+            string _val = Fn.ConvertObjectToString(getMyParameter(mylSide.fieldName));
 
             if (_val == "") return null;
 
@@ -355,8 +354,8 @@ namespace RIFDC
                 {
                     if (isFieldDirty(f.fieldClassName))
                     {
-                        oldVal = fn.toStringNullConvertion(f.actualValue);
-                        newVal = fn.toStringNullConvertion(getMyParameter(f.fieldClassName));
+                        oldVal = Fn.ConvertObjectToString(f.actualValue);
+                        newVal = Fn.ConvertObjectToString(getMyParameter(f.fieldClassName));
                         f0 = new Lib.FieldInfo();
                         f0.fieldClassName = f.fieldClassName;
                         f0.actualValue = oldVal;
@@ -386,14 +385,14 @@ namespace RIFDC
             val1 = getMyParameter(fieldClassName);
             val2 = f.actualValue;
 
-            //fn.dp(fieldClassName + "current=" + val1.ToString() + " saved="+val2.ToString() + ", type is " + f.fieldType.ToString());
+            //Fn.Dp(fieldClassName + "current=" + val1.ToString() + " saved="+val2.ToString() + ", type is " + f.fieldType.ToString());
 
             //TODO слишком простой подход к сравнению объектов, хотя и рабочий
             if (!Lib.RIFDCObjectsEqual(val1, val2, f.fieldType))
             {
                 b = true;
             }
-            //fn.dp((!b) ? "Равны" : "Не равны");
+            //Fn.Dp((!b) ? "Равны" : "Не равны");
 
             // Logger.log("COMPARE", string.Format("Comparing val1={0} and val2={1} at field {2} rezult is {3}", val1, val2, fieldClassName, (b ? "dirty" : "not dirty")));
             return b;
@@ -436,13 +435,13 @@ namespace RIFDC
         public string generateMyId()
         {
             //генерит id этого объекта
-            return entityName + "-" + fn.generate4blockGUID();
+            return entityName + "-" + Fn.GenerateFourBlockString();
         }
 
         public virtual string displayId
         {
             //для отображения в контролах, которые требуют публичных геттеров, напр Combobox
-            get { return fn.toStringNullConvertion(id); }
+            get { return Fn.ConvertObjectToString(id); }
         }
         public virtual string displayName
         {
@@ -459,7 +458,7 @@ namespace RIFDC
         {
             get
             {
-                return fn.getEntityTypeFromFullTypeNameString(GetType().ToString());
+                return Fn.GetEntityTypeFromFullTypeNameString(GetType().ToString());
             }
         }
         public string objectDump()
@@ -483,12 +482,12 @@ namespace RIFDC
                         try
                         {
                             if (f.nullabilityInfo.allowNull && f.nullabilityInfo.considerNull) { valid = false; }
-                        //    fn.dp(String.Format("f.name={0}, allowNull={1}, isNull={2}", f.fieldClassName, f.nullabilityInfo.allowNull, f.nullabilityInfo.isNull));
+                        //    Fn.Dp(String.Format("f.name={0}, allowNull={1}, isNull={2}", f.fieldClassName, f.nullabilityInfo.allowNull, f.nullabilityInfo.isNull));
 
                         }
                         catch (Exception e)
                         {
-                            //fn.dp("Point 0 " + e.Message);
+                            //Fn.Dp("Point 0 " + e.Message);
                         }
                     }
                 }
@@ -597,7 +596,7 @@ namespace RIFDC
             f.addNewFilteringRule(
                 rMe.fieldInfo,
                 Lib.RIFDC_DataCompareOperatorEnum.equal,
-                fn.toStringNullConvertion(msg.targetObject.getMyParameter(rMaster.fieldName)),
+                Fn.ConvertObjectToString(msg.targetObject.getMyParameter(rMaster.fieldName)),
                 Lib.Filter.FilteringRuleTypeEnum.ParentFormFilteringRule,
                 rMaster.targetClass);
 
@@ -622,7 +621,7 @@ namespace RIFDC
         //это класс, хранящий список объектов Т и поддерживающий их CRUD
         ItemKeeper(IDataRoom _dataRoom = null)
         {
-            //  if (_dataRoom == null) { fn.dp("ERROR: ItemKeeper creation requires dataRoom object"); return; }
+            //  if (_dataRoom == null) { Fn.Dp("ERROR: ItemKeeper creation requires dataRoom object"); return; }
             //Можно ли создавать IK без DR ?
             items0 = new FilteredSortedItemList(this);
             filtration = items0;
@@ -633,7 +632,7 @@ namespace RIFDC
             {
                 // 27.03.2021 новая система id, теперь каждый старт ItemKeeper сопровождается чтением таблицы из БД и получением dbprefix
                 Lib.DbOperationResult rte = checkMyTable();
-                if (!rte.success) return;
+                if (!rte.Success) return;
             }
 
         }
@@ -706,7 +705,7 @@ namespace RIFDC
         {
             if (t == null) return Lib.ObjectOperationResult.sayNo("Cant save object because it's null");
 
-            bool isItItemUpdate = (fn.toStringNullConvertion(t.id) != "");
+            bool isItItemUpdate = (Fn.ConvertObjectToString(t.id) != "");
 
             if (memoryOnlyMode)
             {
@@ -718,13 +717,13 @@ namespace RIFDC
                 Lib.DbOperationResult dbr = dataRoom.saveObject(t);
 
                 //здесь их уже нет, значит, надо сохранить
-                if (dbr.success & isItItemUpdate & t.needToSaveMyHistory)
+                if (dbr.Success & isItItemUpdate & t.needToSaveMyHistory)
                 {
                     if (alt != null)
                     {
                         //сохранить историю
-                        alt.alterationDateTimePoint = dbr.updatedDateTime;
-                        alt.id = fn.toStringNullConvertion(t.getMyParameter("id"));
+                        alt.alterationDateTimePoint = dbr.UpdatedDateTime;
+                        alt.id = Fn.ConvertObjectToString(t.getMyParameter("id"));
                         Lib.ObjectOperationResult opr = HistorySaver.getInstance(dataRoom).doSaveHistory(alt);
                         if (!opr.success)
                         {
@@ -740,7 +739,7 @@ namespace RIFDC
 
                 t.saveMyPhoto();
 
-                return Lib.ObjectOperationResult.getInstance(dbr.success, dbr.msg, dbr.createdObjectId);
+                return Lib.ObjectOperationResult.getInstance(dbr.Success, dbr.Message, dbr.CreatedObjectId);
             }
         }
 
@@ -766,20 +765,20 @@ namespace RIFDC
                 Lib.ObjectOperationResult _rez = canDeleteItem(t);
                 if (!_rez.success)
                 {
-                    if(!silent) ServiceFucntions.mb_info(_rez.msg);
+                    if(!silent) WindowsServiceFucntions.mb_info(_rez.msg);
                     return Lib.ObjectOperationResult.sayNo(_rez.msg);
                 }
 
                 Lib.DbOperationResult dbr = dataRoom.deleteItem(t);
 
-                if (dbr.success)
+                if (dbr.Success)
                 {
                     removeItem_from_collection(t.id);
                     return Lib.ObjectOperationResult.sayOk();
                 }
                 else
                 {
-                    return Lib.ObjectOperationResult.getInstance(false, dbr.msg);
+                    return Lib.ObjectOperationResult.getInstance(false, dbr.Message);
                 }
             }
         }
@@ -812,7 +811,7 @@ namespace RIFDC
                 f.addNewFilteringRule(
                     rls_another_side.fieldInfo,
                     Lib.RIFDC_DataCompareOperatorEnum.equal,
-                    fn.toStringNullConvertion(t.getMyParameter(rls_my_side.fieldInfo.fieldClassName)),
+                    Fn.ConvertObjectToString(t.getMyParameter(rls_my_side.fieldInfo.fieldClassName)),
                     Lib.Filter.FilteringRuleTypeEnum.NotSpecified);
                 x.filtration.applyGlobalFilter(f);
                 x.readItems();
@@ -844,13 +843,13 @@ namespace RIFDC
             //todo тут тоже надо вписать правила удаления
             Lib.DbOperationResult dbr = dataRoom.deleteFiteredPackege(sampleObject, filter);
 
-            if (dbr.success)
+            if (dbr.Success)
             {
                 return Lib.ObjectOperationResult.sayOk();
             }
             else
             {
-                return Lib.ObjectOperationResult.sayNo(dbr.msg);
+                return Lib.ObjectOperationResult.sayNo(dbr.Message);
             }
         }
 
@@ -901,7 +900,7 @@ namespace RIFDC
                                 .ToList()
                                 .ForEach(y=> {
 
-                                    fn.dp(string.Format("fieldClassName={0} defaultValue={1} allownull={2}", y.fieldClassName, y.nullabilityInfo.defaultValue, y.nullabilityInfo.allowNull));
+                                    Fn.Dp(string.Format("fieldClassName={0} defaultValue={1} allownull={2}", y.fieldClassName, y.nullabilityInfo.defaultValue, y.nullabilityInfo.allowNull));
                                     t0.setMyParameter(y.fieldClassName, y.nullabilityInfo.defaultValue); });
 
             return t0;
@@ -965,7 +964,7 @@ namespace RIFDC
 
 
                 // если там нет id, сделать его
-                if (fn.toStringNullConvertion(newObject.id) == "") newObject.setMyParameter("id", newObject.generateMyId() + "-tmp");
+                if (Fn.ConvertObjectToString(newObject.id) == "") newObject.setMyParameter("id", newObject.generateMyId() + "-tmp");
 
                 //сохранить свои параметры
                 if (newObject.isDataPresenceValid)
@@ -978,7 +977,7 @@ namespace RIFDC
                     }
                     catch (Exception e)
                     {
-                        fn.dp("Point 1 " + e.Message);
+                        Fn.Dp("Point 1 " + e.Message);
                     }
                 }
             }
@@ -995,7 +994,7 @@ namespace RIFDC
         public void simpleObjectDump()
         {
             //простой листинг items в консоль
-            fn.dp("This is dump of IKeeper: "+ entityType);
+            Fn.Dp("This is dump of IKeeper: "+ entityType);
             foreach (T t in actualItemList)
             {
                 Console.WriteLine(t.objectDump());
@@ -1405,9 +1404,9 @@ namespace RIFDC
                             }
                             else
                             {
-                                //Lib.IKeepableListSimpleDump(_collection, fn.chr10 + "***Before sort-ASC");
+                                //Lib.IKeepableListSimpleDump(_collection, Fn.Chr10 + "***Before sort-ASC");
                                 _collection = _collection.OrderBy(m => m.GetType().GetField(s.fieldInfoObject.fieldClassName).GetValue(m)).ToList();
-                                //Lib.IKeepableListSimpleDump(_collection, fn.chr10 + "***After sort");
+                                //Lib.IKeepableListSimpleDump(_collection, Fn.Chr10 + "***After sort");
                             }
                         }
                         else
@@ -1418,9 +1417,9 @@ namespace RIFDC
                             }
                             else
                             {
-                                //Lib.IKeepableListSimpleDump(_collection, fn.chr10 + "***Before sort-DESC");
+                                //Lib.IKeepableListSimpleDump(_collection, Fn.Chr10 + "***Before sort-DESC");
                                 _collection = _collection.OrderByDescending(m => m.GetType().GetField(s.fieldInfoObject.fieldClassName).GetValue(m)).ToList();
-                                //Lib.IKeepableListSimpleDump(_collection, fn.chr10 + "***After sort");
+                                //Lib.IKeepableListSimpleDump(_collection, Fn.Chr10 + "***After sort");
                             }
                         }
                     });

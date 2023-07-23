@@ -9,12 +9,12 @@ using System.Windows.Forms;
 using System.Data;
 using StateMachineNamespace;
 using ObjectParameterEngine;
-using RICOMPANY.CommonFunctions;
 using RIFDC;
 using System.Collections;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Linq;
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {
@@ -61,7 +61,7 @@ namespace RIFDC
                     }
                 }
 
-                public string targetClassName { get { return fn.getEntityTypeFromFullTypeNameString(targetClass.Name); } }
+                public string targetClassName { get { return Fn.GetEntityTypeFromFullTypeNameString(targetClass.Name); } }
 
                 public string fieldName; //имя поля в классе, которым он участвует в этом relation
 
@@ -284,7 +284,7 @@ namespace RIFDC
             {
                 //инициализация последующего элемента из предыдущего
 
-                //addElement(new RelationsChainElement(r, myEntityName)); 
+                //AddElement(new RelationsChainElement(r, myEntityName)); 
             }
 
             public string tailTableName
@@ -379,11 +379,11 @@ namespace RIFDC
                        left.myKeyFieldName == right.myKeyFieldName &&
                        left.nextKeyFieldName == right.nextKeyFieldName;
                     /*
-                    fn.dp("");
-                    fn.dp("Comparing entities:");
-                    fn.dp(left.ToString());
-                    fn.dp(right.ToString());
-                    fn.dp("Rezult is: " + ( rez ? "EQUAL" : "NOT EQUAL"));
+                    Fn.Dp("");
+                    Fn.Dp("Comparing entities:");
+                    Fn.Dp(left.ToString());
+                    Fn.Dp(right.ToString());
+                    Fn.Dp("Rezult is: " + ( rez ? "EQUAL" : "NOT EQUAL"));
                     */
                    
 

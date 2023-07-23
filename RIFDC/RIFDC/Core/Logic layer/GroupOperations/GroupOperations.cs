@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using RICOMPANY.CommonFunctions;
+using RIFDC.RIFDC.Service;
 
 namespace RIFDC
 {
@@ -106,7 +106,7 @@ namespace RIFDC
             RemoveEventHandlerOfType("TextChanged", tbValue);
             RemoveEventHandlerOfType("Leave", tbValue);
 
-            dfc.addRecordBasedControlMapping(new RIFDC_TextBox(tbValue), fn.toStringNullConvertion(cbxSetValueParameter.SelectedValue));
+            dfc.addRecordBasedControlMapping(new RIFDC_TextBox(tbValue), Fn.ConvertObjectToString(cbxSetValueParameter.SelectedValue));
 
             keeper.clear();
             keeper.createNewObject_inserted();
@@ -134,7 +134,7 @@ namespace RIFDC
                 
                 if (eventFieldInfo==null)
                 {
-                    fn.dp("Event not found:  "+ eventName);
+                    Fn.Dp("Event not found:  "+ eventName);
                     return;
                 }
                 //это проде как его значение, т.е. делегат
@@ -147,7 +147,7 @@ namespace RIFDC
         {
             get
             {
-                string s = fn.toStringNullConvertion(cbxSetValueParameter.SelectedValue.ToString());
+                string s = Fn.ConvertObjectToString(cbxSetValueParameter.SelectedValue.ToString());
 
                 if (s == "") return null;
 
@@ -168,7 +168,7 @@ namespace RIFDC
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ServiceFucntions.mb_info(string.Join(" ", items.Select(x => x.id).ToList()));
+            WindowsServiceFucntions.mb_info(string.Join(" ", items.Select(x => x.id).ToList()));
         }
 
         private void cbxSetValueParameter_SelectedIndexChanged(object sender, EventArgs e)
@@ -176,7 +176,7 @@ namespace RIFDC
             if (fillEditControlsFlag) return;
             fillEditControlsFlag = true;
             doSelectWorkingField();
-            fn.dp("selected field is "+ cbxSetValueParameter.SelectedValue.ToString());
+            Fn.Dp("selected field is "+ cbxSetValueParameter.SelectedValue.ToString());
             fillEditControlsFlag = false;
         }
 
@@ -201,17 +201,17 @@ namespace RIFDC
                         or1= startMsg.targetKeeper.saveItem(x);
                         if (or1.success)
                         {
-                            success.Add(string.Format("id={0}: {1}", x.id, "success"));
+                            success.Add(string.Format("id={0}: {1}", x.id, "Success"));
 
                         }
                         else
                         {
-                            errors.Add(string.Format("id={0}: error saving into db msg={1} ", x.id, or.msg));
+                            errors.Add(string.Format("id={0}: error saving into db Message={1} ", x.id, or.msg));
                         }
                     }
                     else
                     {
-                        errors.Add(string.Format("id={0}: error saving object msg={1} ", x.id, or.msg));
+                        errors.Add(string.Format("id={0}: error saving object Message={1} ", x.id, or.msg));
                     }
 
                 }
@@ -222,11 +222,11 @@ namespace RIFDC
             }
 
             string rez = string.Format("Результат групповой операции:{0}{1}{2}", 
-                            string.Join(fn.chr13, success), 
-                            fn.chr13, 
-                            string.Join(fn.chr13, errors));
+                            string.Join(Fn.Chr13, success), 
+                            Fn.Chr13, 
+                            string.Join(Fn.Chr13, errors));
 
-            ServiceFucntions.mb_info(rez);
+            WindowsServiceFucntions.mb_info(rez);
         }
 
 
@@ -258,14 +258,14 @@ namespace RIFDC
             //и вот это я тащу аж из объекта
             if (vr.validationSuccess)
             {
-                //если leave валидация success, ставим возвращенное value и уходим с поля
-                tbValue.Text = fn.toStringNullConvertion(vr.validatedValue);
+                //если leave валидация Success, ставим возвращенное value и уходим с поля
+                tbValue.Text = Fn.ConvertObjectToString(vr.validatedValue);
             }
             else
             {
-                //если leave валидация !success, возвращаем пользователя на поле, показываем сообщение
+                //если leave валидация !Success, возвращаем пользователя на поле, показываем сообщение
                 tbValue.Focus();
-                fn.mb_info(vr.validationMsg);
+                Fn.MessageBoxInfo(vr.validationMsg);
                 return;
             }
 
@@ -279,14 +279,14 @@ namespace RIFDC
             //и вот это я тащу аж из объекта
             if (vr.validationSuccess)
             {
-                //если leave валидация success, ставим возвращенное value и уходим с поля
-                tbValue.Text = fn.toStringNullConvertion(vr.validatedValue);
+                //если leave валидация Success, ставим возвращенное value и уходим с поля
+                tbValue.Text = Fn.ConvertObjectToString(vr.validatedValue);
             }
             else
             {
-                //если leave валидация !success, возвращаем пользователя на поле, показываем сообщение
+                //если leave валидация !Success, возвращаем пользователя на поле, показываем сообщение
                 tbValue.Focus();
-                fn.mb_info(vr.validationMsg);
+                Fn.MessageBoxInfo(vr.validationMsg);
                 return;
             }
             */
