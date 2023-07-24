@@ -7,18 +7,13 @@ using RIFDC;
 
 namespace CoffeePointsDemo
 {
-    class CoffeePoint : KeepableClass, IKeepable
+    public class CoffeePoint : KeepableClass, IKeepable
     {
-        public string name;
-        public DateTime lastVisitDate;
-        public double bigLattePrice;
-        public string description;
-        public string alias;
-
-        public DateTime lastVisitDate2;
-        public double bigLattePrice2;
-        public string description2;
-
+        public string Name { get; set; }
+        public DateTime LastVisitDate { get; set; }
+        public double BigLattePrice { get; set; }
+        public string Description { get; set; }
+        public string Alias { get; set; }
 
         public override string TableName { get { return "CoffeePoints"; } }
         public override string EntityName { get { return "CoffeePoint"; } }
@@ -28,7 +23,7 @@ namespace CoffeePointsDemo
             Lib.FieldInfo x;
             Lib.FieldsInfo f = this.getInitialFieldsInfoObject();
 
-            x = f.addFieldInfoObject("name", "name", Lib.FieldTypeEnum.String);
+            x = f.addFieldInfoObject("Name", "Name", Lib.FieldTypeEnum.String);
             x.nullabilityInfo.allowNull = false;
             x.nullabilityInfo.defaultValue = "NewCoffeePoint";
             x.caption = "Название";
@@ -36,11 +31,11 @@ namespace CoffeePointsDemo
             x.isSearchable = true;
             
 
-            x = f.addFieldInfoObject("lastVisitDate", "lastVisitDate", Lib.FieldTypeEnum.Date);
+            x = f.addFieldInfoObject("LastVisitDate", "LastVisitDate", Lib.FieldTypeEnum.Date);
             x.nullabilityInfo.allowNull = true;
             x.caption = "Посл.посещение";
 
-            x = f.addFieldInfoObject("bigLattePrice", "bigLattePrice", Lib.FieldTypeEnum.Double);
+            x = f.addFieldInfoObject("BigLattePrice", "BigLattePrice", Lib.FieldTypeEnum.Double);
             x.nullabilityInfo.allowNull = true;
             x.caption = "Цена большого латте";
             x.validationInfo.symbolValidation.rules.Add(new VCCommon.VF.com_symbol_double(','));
@@ -48,25 +43,25 @@ namespace CoffeePointsDemo
             //x.validationInfo.businessValidation.rules.Add(new VCCommon.VF.biz_priceMoreThan80());
             x.saveHistory = true;
 
-            x = f.addFieldInfoObject("description", "description", Lib.FieldTypeEnum.String);
+            x = f.addFieldInfoObject("Description", "Description", Lib.FieldTypeEnum.String);
             x.caption = "Комментарий";
             x.nullabilityInfo.allowNull = true;
             x.isSearchable = true;
 
-            x = f.addFieldInfoObject("alias", "alias", Lib.FieldTypeEnum.String);
+            x = f.addFieldInfoObject("Alias", "Alias", Lib.FieldTypeEnum.String);
             x.caption = "Алиас";
             x.nullabilityInfo.allowNull = false;
             x.nullabilityInfo.defaultValue = "NewCoffeePointAlias";
             x.isSearchable = true;
 
 
-            x = f.addFieldInfoObject("lastVisitDate2", "lastVisitDate2", Lib.FieldTypeEnum.Date);
+            x = f.addFieldInfoObject("LastVisitDate2", "LastVisitDate2", Lib.FieldTypeEnum.Date);
             x.nullabilityInfo.allowNull = false;
             x.caption = "Посл.посещение2";
             x.nullabilityInfo.defaultValue = Convert.ToDateTime("01.01.2001");
 
 
-            x = f.addFieldInfoObject("bigLattePrice2", "bigLattePrice2", Lib.FieldTypeEnum.Double);
+            x = f.addFieldInfoObject("BigLattePrice2", "BigLattePrice2", Lib.FieldTypeEnum.Double);
             x.nullabilityInfo.allowNull = false;
             x.nullabilityInfo.defaultValue = 100;
             x.caption = "Цена большого латте2";
@@ -76,7 +71,7 @@ namespace CoffeePointsDemo
             x.isAvialbeForGroupOperations = true;
 
 
-            x = f.addFieldInfoObject("description2", "description2", Lib.FieldTypeEnum.String);
+            x = f.addFieldInfoObject("Description2", "Description2", Lib.FieldTypeEnum.String);
             x.caption = "Комментарий2";
             x.nullabilityInfo.allowNull = false;
             x.nullabilityInfo.defaultValue = "Default Description";
@@ -104,14 +99,14 @@ namespace CoffeePointsDemo
                     Lib.FieldsInfo f = sampleObject.fieldsInfo;
 
                     tmp = "id"; g.addFormatLine(tmp, 0, f.getFieldInfoObjectByFieldClassName(tmp).caption);
-                    tmp = "name"; g.addFormatLine(tmp, 150, f.getFieldInfoObjectByFieldClassName(tmp).caption);
-                    tmp = "lastVisitDate"; g.addFormatLine(tmp, 100, f.getFieldInfoObjectByFieldClassName(tmp).caption);
-                    tmp = "bigLattePrice"; g.addFormatLine(tmp, 50, f.getFieldInfoObjectByFieldClassName(tmp).caption);
-                    tmp = "description"; g.addFormatLine(tmp, 200, f.getFieldInfoObjectByFieldClassName(tmp).caption);
-                    tmp = "alias"; g.addFormatLine(tmp, 150, f.getFieldInfoObjectByFieldClassName(tmp).caption);
-                    tmp = "lastVisitDate2"; g.addFormatLine(tmp, 100, f.getFieldInfoObjectByFieldClassName(tmp).caption);
-                    tmp = "bigLattePrice2"; g.addFormatLine(tmp, 50, f.getFieldInfoObjectByFieldClassName(tmp).caption);
-                    tmp = "description2"; g.addFormatLine(tmp, 200, f.getFieldInfoObjectByFieldClassName(tmp).caption);
+                    tmp = "Name"; g.addFormatLine(tmp, 150, f.getFieldInfoObjectByFieldClassName(tmp).caption);
+                    tmp = "LastVisitDate"; g.addFormatLine(tmp, 100, f.getFieldInfoObjectByFieldClassName(tmp).caption);
+                    tmp = "BigLattePrice"; g.addFormatLine(tmp, 50, f.getFieldInfoObjectByFieldClassName(tmp).caption);
+                    tmp = "Description"; g.addFormatLine(tmp, 200, f.getFieldInfoObjectByFieldClassName(tmp).caption);
+                    tmp = "Alias"; g.addFormatLine(tmp, 150, f.getFieldInfoObjectByFieldClassName(tmp).caption);
+                    tmp = "LastVisitDate2"; g.addFormatLine(tmp, 100, f.getFieldInfoObjectByFieldClassName(tmp).caption);
+                    tmp = "BigLattePrice2"; g.addFormatLine(tmp, 50, f.getFieldInfoObjectByFieldClassName(tmp).caption);
+                    tmp = "Description2"; g.addFormatLine(tmp, 200, f.getFieldInfoObjectByFieldClassName(tmp).caption);
 
 
                     return g;
@@ -124,7 +119,7 @@ namespace CoffeePointsDemo
         {
             get
             {
-                return name;
+                return Name;
             }
         }
 

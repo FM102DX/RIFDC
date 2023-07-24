@@ -224,7 +224,7 @@ namespace RIFDC
             string commStr;
             int rez = 0;
             string errStr = "";
-            commStr = "delete from " + sample.tableName + " where " + getWhereConditionFromFilter(filter);
+            commStr = "delete from " + sample.TableName + " where " + getWhereConditionFromFilter(filter);
             try
             {
                 MySqlCommand com = new MySqlCommand(commStr, activeConnection);
@@ -277,7 +277,7 @@ namespace RIFDC
             string commStr;
             int rez = 0;
             string errStr = "";
-            commStr = "delete from " + t.tableName + " where id='" + t.id.ToString() + "'";
+            commStr = "delete from " + t.TableName + " where id='" + t.id.ToString() + "'";
             try
             {
                 MySqlCommand com = new MySqlCommand(commStr, activeConnection);
@@ -639,7 +639,7 @@ namespace RIFDC
 
         private string generateInsertCommand(IKeepable t)
         {
-            string cmdText = "insert into " + t.tableName + " (";
+            string cmdText = "insert into " + t.TableName + " (";
             string valStr = " values (";
             int i = 0;
             string s0;
@@ -671,7 +671,7 @@ namespace RIFDC
 
         private string generateUpdateCommand(IKeepable t)
         {
-            string cmdText = "UPDATE " + t.tableName + " SET ";
+            string cmdText = "UPDATE " + t.TableName + " SET ";
             string s0;
             int i;
             object tmp = null;
@@ -808,7 +808,7 @@ namespace RIFDC
                 //теперь условие from
                 // добавляем outer join к условию from, его надо собрать из relationsChain
                 tmp = "";
-                s += " from  " + t.tableName + " ";
+                s += " from  " + t.TableName + " ";
                 t.fieldsInfo.relationsChainUniqueElements.ForEach(x => {
                     tmp += string.Format(" left join {0} on {1}.{2}={3}.{4} ", x.nextTableName, x.myTableName, x.myKeyFieldName, x.nextTableName,x.nextKeyFieldName);
                 });
@@ -821,7 +821,7 @@ namespace RIFDC
             else
             {
                 //если это просто запрос
-                s = "Select * from " + t.tableName + " " + (whereCondition == "" ? "" : " where " + whereCondition);
+                s = "Select * from " + t.TableName + " " + (whereCondition == "" ? "" : " where " + whereCondition);
             }
 
             return s;
@@ -986,7 +986,7 @@ namespace RIFDC
             {
                 activeConnection = _activeConnection;
                 sampleObject = _sampleObject;
-                tableName = sampleObject.tableName;
+                tableName = sampleObject.TableName;
 
             }
 

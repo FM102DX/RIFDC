@@ -1,0 +1,35 @@
+﻿<Window x:Class="CoffeePointsDemoWpf.CoffeePointsDemoFrm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CoffeePointsDemoWpf"
+        mc:Ignorable="d"
+        Title="CoffeePointsDemo" Height="450" Width="800">
+    <Grid>
+        <DataGrid 
+            HorizontalAlignment="Left"
+            x:Name="ActivityGrid" 
+            Height="414" 
+            Margin="10,0,0,0" 
+            VerticalAlignment="Center" 
+            Width="552" 
+            SelectionMode="Single" 
+            IsReadOnly="True" 
+            CanUserAddRows="False" 
+            SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ItemsSource="{Binding AcivityListItemSource, Mode=OneWay}"
+            AutoGenerateColumns="False"
+            SelectionUnit="FullRow"
+            CellStyle="{DynamicResource DataGridCellStyle1}" >
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name"               Binding="{Binding ActivityId}"                   IsReadOnly="True" MinWidth="70"/>
+                <DataGridTextColumn Header="LastVisitDate"      Binding="{Binding ParentActivities}"             IsReadOnly="True" Width="100"/>
+                <DataGridTextColumn Header="BigLattePrice"      Binding="{Binding Name}"                         IsReadOnly="True" Width="170"/>
+                <DataGridTextColumn Header="Alias"              Binding="{Binding TransactionId}"                IsReadOnly="True" Width="70"/>
+                <DataGridTextColumn Header="Comment"            Binding="{Binding StartTime}"                    IsReadOnly="True" Width="70"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

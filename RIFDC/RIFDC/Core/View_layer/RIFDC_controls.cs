@@ -836,7 +836,7 @@ namespace RIFDC
             }
             foreach (IKeepable x in data.dataSource.actualItemList)
             {
-                items.Add(ComboBoxDataLine.getInstance(x.displayId, x.displayName));
+                items.Add(ComboBoxDataLine.getInstance(x.displayId, x.DisplayName));
             }
             cbx.DataSource = items;
 

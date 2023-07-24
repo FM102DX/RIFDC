@@ -1260,8 +1260,6 @@ namespace RIFDC
                 frmStateLockedNoRecords = 3 // нет записей, доступно только добавление
             }
         }
-
-
         public class FormCrudOperator_GridOnly : CrudOperatorPattern //, iFormCrudOperator
         {
             public FormCrudOperator_GridOnly(DataFormComponent _parent) : base(_parent)
@@ -1584,8 +1582,6 @@ namespace RIFDC
                 processFormEvent(formEventType, sender, e, ke);
             }
         }
-
-        
 
         public abstract class CrudOperatorPattern
         {
@@ -1992,9 +1988,6 @@ namespace RIFDC
             }
 
         }
-
     }
-
-
 }
 

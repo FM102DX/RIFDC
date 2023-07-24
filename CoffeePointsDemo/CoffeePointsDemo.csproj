@@ -13,6 +13,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RIFDC\RIFDC.csproj" />
+    <ProjectReference Include="..\RIFDC\RIFDC_DLL.csproj" />
   </ItemGroup>
 </Project>

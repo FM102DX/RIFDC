@@ -67,7 +67,7 @@ namespace RIFDC
 
             // итак, у нас есть список элементов, которому будет присвоено значение
 
-            ibTargetObjects.Text = string.Format("Тип объектов= {0}, количество объектов={1}", startMsg.targetKeeper.sampleObject.entityName, items.Count);
+            ibTargetObjects.Text = string.Format("Тип объектов= {0}, количество объектов={1}", startMsg.targetKeeper.sampleObject.EntityName, items.Count);
 
             // дальше, взять значение из поля и присвоить
 
@@ -100,7 +100,7 @@ namespace RIFDC
 
             //Delegate[] delegAry = tbValue.TextChanged.GetInvocationList();
 
-            keeper = RIFDC_App.iKeeperSampleHolder.getIKeeperByEntityType(startMsg.targetKeeper.sampleObject.entityName);
+            keeper = RIFDC_App.iKeeperSampleHolder.getIKeeperByEntityType(startMsg.targetKeeper.sampleObject.EntityName);
             dfc = new DataFormComponent(keeper, this, Lib.FrmCrudModeEnum.GridAndFieldsOnTheFly);
             dfc.tag = "сардина-1";
             RemoveEventHandlerOfType("TextChanged", tbValue);

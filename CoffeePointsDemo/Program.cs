@@ -45,8 +45,6 @@ namespace CoffeePointsDemo
             RIFDC_App.mainDataRoom = mainDataRoom;
             RIFDC_App.currentUserId = "user01";
 
-            
-
             #region localCnn
 
             /*
