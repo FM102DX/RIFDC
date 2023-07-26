@@ -106,8 +106,8 @@ namespace RIFDC
     public interface IKeepable
     {
         Lib.FieldsInfo fieldsInfo { get; }
-        string tableName { get; }
-        string entityName { get; }
+        string TableName { get; }
+        string EntityName { get; }
         bool storeSerialized { get; }
         string id { get; set; }
         string parentId { get; set; }
@@ -131,7 +131,7 @@ namespace RIFDC
 
         void saveMyPhoto();
         string displayId { get; }
-        string displayName { get; }
+        string DisplayName { get; }
         string entityType { get; }
         Lib.FieldInfo getFieldInfoByFieldClassName(string fieldClassName);
         string objectDump();

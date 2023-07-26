@@ -59,7 +59,7 @@ namespace RIFDC
         public static void IKeepableListSimpleDump(List<IKeepable> lst, string msg ="")
         {
             if (msg != "") Fn.Dp(msg);
-            lst.ForEach(x=> { Fn.Dp(string.Format("id={0} name={1}", x.id, x.displayName)); });
+            lst.ForEach(x=> { Fn.Dp(string.Format("id={0} name={1}", x.id, x.DisplayName)); });
         }
 
         public interface IControlFormat

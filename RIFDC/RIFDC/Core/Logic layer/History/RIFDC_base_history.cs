@@ -140,8 +140,8 @@ namespace RIFDC
         public class HistorySaverUnit: KeepableClass
         {
             //это строка таблицы с историей, т.е. объект, содержащий изменение параметра какого-либо  бизнес-объекта
-            public override string tableName { get { return "ObjectHistory"; } }
-            public override string entityName { get { return "HistorySaverUnit"; } }
+            public override string TableName { get { return "ObjectHistory"; } }
+            public override string EntityName { get { return "HistorySaverUnit"; } }
 
             public string objectId { get; set; } = "";
 

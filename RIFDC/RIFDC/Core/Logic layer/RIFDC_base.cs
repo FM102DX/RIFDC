@@ -290,12 +290,13 @@ namespace RIFDC
 
             // надо как-то узнать, является ли поле геттером, т.к. если это геттер, то знак nullabilityInfo.isNull не был сброшен
             bool isGetter = ObjectParameters.isItOnlyGetter(this, fieldClassName);
+
             if (isNull && isGetter) isNull = false; // геттер не может быть null
 
 
             object defaultValue = f.nullabilityInfo.defaultValue;
 
-            if (nullable & isNull) return null;
+            // if (nullable & isNull) return null;
 
             object value = ObjectParameters.getObjectParameterByName(this, fieldClassName).value;
 
@@ -347,7 +348,7 @@ namespace RIFDC
             Lib.FieldInfo f0;
             string newVal;
             string oldVal;
-            x.entityName = entityName;
+            x.entityName = EntityName;
             foreach (Lib.FieldInfo f in fieldsInfo.fields)
             {
                 if (f.saveHistory)
@@ -403,8 +404,8 @@ namespace RIFDC
         public virtual Lib.FieldsInfo _get_fieldsInfo() { return null; }
 
         //public Lib.FieldsInfo actualValues; //список полей со значениями 
-        public virtual string tableName { get; }
-        public virtual string entityName { get; } //TODO проверка классов на уникальность этого поля
+        public virtual string TableName { get; }
+        public virtual string EntityName { get; } //TODO проверка классов на уникальность этого поля
 
         public virtual bool storeSerialized { get; }
 
@@ -435,7 +436,7 @@ namespace RIFDC
         public string generateMyId()
         {
             //генерит id этого объекта
-            return entityName + "-" + Fn.GenerateFourBlockString();
+            return EntityName + "-" + Fn.GenerateFourBlockString();
         }
 
         public virtual string displayId
@@ -443,7 +444,7 @@ namespace RIFDC
             //для отображения в контролах, которые требуют публичных геттеров, напр Combobox
             get { return Fn.ConvertObjectToString(id); }
         }
-        public virtual string displayName
+        public virtual string DisplayName
         {
             //для отображения в контролах, которые требуют публичных геттеров, напр Combobox
             get { return ""; }
@@ -508,8 +509,8 @@ namespace RIFDC
             f.allowDateTimeOfCreation = _allowDateTimeOfCreation;
             f.allowDateTimeOfLastChange = _allowDateTimeOfLastChange;
             f.allowCreatedByUserId = _allowCreatedByUserId;
-            f.tableName = tableName;
-            f.entityName = entityName;
+            f.tableName = TableName;
+            f.entityName = EntityName;
             Lib.FieldInfo x;
 
             if (f.allowId)
@@ -532,7 +533,7 @@ namespace RIFDC
                 f.addFieldInfoObject("createdByUserId", "createdByUserId", Lib.FieldTypeEnum.String);
             }
 
-            x = f.addFieldInfoObject("searchable", "", Lib.FieldTypeEnum.String);
+            x = f.addFieldInfoObject("searchable", "searchable", Lib.FieldTypeEnum.String);
             x.parameterSignificanceInfo.significanceType = Lib.ParameterSignificanceInfo.ParameterSignificanceTypeEnum.LocallyCountableGetter;
 
 
@@ -619,10 +620,10 @@ namespace RIFDC
     public partial class ItemKeeper<T> : IKeeper where T : IKeepable, new()
     {
         //это класс, хранящий список объектов Т и поддерживающий их CRUD
-        ItemKeeper(IDataRoom _dataRoom = null)
+        public ItemKeeper(IDataRoom _dataRoom = null)
         {
             //  if (_dataRoom == null) { Fn.Dp("ERROR: ItemKeeper creation requires dataRoom object"); return; }
-            //Можно ли создавать IK без DR ?
+            //  Можно ли создавать IK без DR ?
             items0 = new FilteredSortedItemList(this);
             filtration = items0;
             sort = items0;
@@ -630,12 +631,12 @@ namespace RIFDC
             dataRoom = _dataRoom;
             if (!memoryOnlyMode)
             {
-                // 27.03.2021 новая система id, теперь каждый старт ItemKeeper сопровождается чтением таблицы из БД и получением dbprefix
+                //  27.03.2021 новая система id, теперь каждый старт ItemKeeper сопровождается чтением таблицы из БД и получением dbprefix
                 Lib.DbOperationResult rte = checkMyTable();
                 if (!rte.Success) return;
             }
-
         }
+
         public static ItemKeeper<T> getInstance(IDataRoom _dataRoom = null)
         {
             ItemKeeper<T> x = new ItemKeeper<T>(_dataRoom);
@@ -745,8 +746,6 @@ namespace RIFDC
 
         public Lib.ObjectOperationResult deleteItem(IKeepable t, bool silent=false)
         {
-
-
             // TODO стоп, а если там цепочка удалений?
             // логика удаления хранится в объекте, или в групповом объекте? ну если там несколько удалений
             // видимо, в групповом объекте. объект хранит только как удалить оттуда "себя лично"

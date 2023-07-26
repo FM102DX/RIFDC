@@ -224,7 +224,7 @@ namespace RIFDC
             string commStr;
             int rez = 0;
             string errStr = "";
-            commStr = "delete from " + sample.tableName + " where " + getWhereConditionFromFilter(filter);
+            commStr = "delete from " + sample.TableName + " where " + getWhereConditionFromFilter(filter);
             try
             {
                 MySqlCommand com = new MySqlCommand(commStr, activeConnection);
@@ -277,7 +277,7 @@ namespace RIFDC
             string commStr;
             int rez = 0;
             string errStr = "";
-            commStr = "delete from " + t.tableName + " where id='" + t.id.ToString() + "'";
+            commStr = "delete from " + t.TableName + " where id='" + t.id.ToString() + "'";
             try
             {
                 MySqlCommand com = new MySqlCommand(commStr, activeConnection);
@@ -303,7 +303,7 @@ namespace RIFDC
         public Lib.DbOperationResult saveObject(IKeepable t)
         {
             //этот метод сохраняет объект IKeeper в базе 
-            //Если есть ID, то это обновление. Если нет ID - добавление
+            //Если есть ID, то это обновление. Если нет ID - добавление 
 
             string commStr;
             MySqlCommand com;
@@ -342,8 +342,11 @@ namespace RIFDC
                         commStr = generateInsertCommand(t);
 
                         Logger.log("DB", "Executing query: " + commStr);
+
                         com = new MySqlCommand(commStr, activeConnection);
+
                         com.ExecuteNonQuery();
+
                         success = true;
 
                         break;
@@ -639,7 +642,7 @@ namespace RIFDC
 
         private string generateInsertCommand(IKeepable t)
         {
-            string cmdText = "insert into " + t.tableName + " (";
+            string cmdText = "insert into " + t.TableName + " (";
             string valStr = " values (";
             int i = 0;
             string s0;
@@ -648,12 +651,16 @@ namespace RIFDC
             foreach (Lib.FieldInfo f in t.fieldsInfo.fields)
             {
                 //добавляем поля
-                if (f.parameterSignificanceInfo.significanceType!= Lib.ParameterSignificanceInfo.ParameterSignificanceTypeEnum.Solid) continue;
+                if (f.parameterSignificanceInfo.significanceType!= Lib.ParameterSignificanceInfo.ParameterSignificanceTypeEnum.Solid)
+                { 
+                        continue;
+                }
 
                 /*
                 bool needsComma = f.isStringValue | f.fieldType == Lib.FieldTypeEnum.Date | f.fieldType == Lib.FieldTypeEnum.Time | f.fieldType == Lib.FieldTypeEnum.DateTime;
                 string b = (needsComma) ? "'" : ""; //если это строка или даты, то нужны кавычки
-*/
+                */
+
                 string comma = i == howMenySolidFields - 1 ? "" : ","; //запятая
                 cmdText = cmdText + f.fieldDbName + comma;
                 s0 = insertUpdateValueCorrection(t, f, t.getMyParameter(f.fieldClassName));
@@ -671,7 +678,7 @@ namespace RIFDC
 
         private string generateUpdateCommand(IKeepable t)
         {
-            string cmdText = "UPDATE " + t.tableName + " SET ";
+            string cmdText = "UPDATE " + t.TableName + " SET ";
             string s0;
             int i;
             object tmp = null;
@@ -808,7 +815,7 @@ namespace RIFDC
                 //теперь условие from
                 // добавляем outer join к условию from, его надо собрать из relationsChain
                 tmp = "";
-                s += " from  " + t.tableName + " ";
+                s += " from  " + t.TableName + " ";
                 t.fieldsInfo.relationsChainUniqueElements.ForEach(x => {
                     tmp += string.Format(" left join {0} on {1}.{2}={3}.{4} ", x.nextTableName, x.myTableName, x.myKeyFieldName, x.nextTableName,x.nextKeyFieldName);
                 });
@@ -821,7 +828,7 @@ namespace RIFDC
             else
             {
                 //если это просто запрос
-                s = "Select * from " + t.tableName + " " + (whereCondition == "" ? "" : " where " + whereCondition);
+                s = "Select * from " + t.TableName + " " + (whereCondition == "" ? "" : " where " + whereCondition);
             }
 
             return s;
@@ -986,7 +993,7 @@ namespace RIFDC
             {
                 activeConnection = _activeConnection;
                 sampleObject = _sampleObject;
-                tableName = sampleObject.tableName;
+                tableName = sampleObject.TableName;
 
             }
 
@@ -1005,7 +1012,7 @@ namespace RIFDC
                     try
                     {
                         //если нет, создаем таблицу
-                        createTableQuery = "CREATE TABLE " + tableName + " (id  VARCHAR(50) NOT NULL UNIQUE)";
+                        createTableQuery = "CREATE TABLE " + tableName + " (id  VARCHAR(200) NOT NULL UNIQUE)";
                         MySqlCommand com = new MySqlCommand(createTableQuery, activeConnection);
                         Logger.log("DB", "EXECUTING QUERY: " + createTableQuery);
                         //A table must have at least 1 column - эту шоибку выдал MySql
@@ -1064,7 +1071,7 @@ namespace RIFDC
                     if (!fIsNull)
                     {
                         nullTxt = f.nullabilityInfo.allowNull ? "NULL" : "NOT NULL";
-                        defaultTxt = f.nullabilityInfo.defaultValue == null ? "" : "DEFAULT " + valueForDbWithQuotes(f, f.nullabilityInfo.defaultValue);
+                        defaultTxt = ""; //f.nullabilityInfo.defaultValue == null ? "" : "DEFAULT " + valueForDbWithQuotes(f, f.nullabilityInfo.defaultValue);
                     }
 
                     if (fIsNull && tagIsEmpty) { tag = " TEXT NULL"; } //ну то есть если нет филдинфо и тега, то это будет просто текстовое поле

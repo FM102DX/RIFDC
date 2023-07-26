@@ -86,7 +86,7 @@ namespace RIFDC
                         string s = "";
                         try
                         {
-                            s = myIKeeper.sampleObject.tableName;
+                            s = myIKeeper.sampleObject.TableName;
                         }
                         catch
                         {
