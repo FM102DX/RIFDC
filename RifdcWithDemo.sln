@@ -8,11 +8,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeePointsDemo", "CoffeePointsDemo\CoffeePointsDemo.csproj", "{1B24BDEE-7264-4214-A879-44955FBED600}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RIFDC_DLL", "RIFDC\RIFDC_DLL.csproj", "{245A2360-53B7-4E4E-A698-9D745F741229}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeePointsDemoWpf", "CoffeePointsDemoWpf\CoffeePointsDemoWpf.csproj", "{4F529426-CFA3-46A4-B149-86DBDAEC86D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeePointsDemoWpf", "CoffeePointsDemoWpf\CoffeePointsDemoWpf.csproj", "{4F529426-CFA3-46A4-B149-86DBDAEC86D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,22 +24,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Debug|ARM.Build.0 = Debug|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Debug|x64.Build.0 = Debug|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Debug|x86.Build.0 = Debug|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Release|ARM.ActiveCfg = Release|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Release|ARM.Build.0 = Release|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Release|x64.ActiveCfg = Release|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Release|x64.Build.0 = Release|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Release|x86.ActiveCfg = Release|Any CPU
-		{1B24BDEE-7264-4214-A879-44955FBED600}.Release|x86.Build.0 = Release|Any CPU
 		{245A2360-53B7-4E4E-A698-9D745F741229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{245A2360-53B7-4E4E-A698-9D745F741229}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{245A2360-53B7-4E4E-A698-9D745F741229}.Debug|ARM.ActiveCfg = Debug|Any CPU
