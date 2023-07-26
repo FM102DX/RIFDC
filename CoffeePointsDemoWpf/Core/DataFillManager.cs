@@ -33,17 +33,17 @@ namespace ActivityScheduler.Data.Managers
                 Alias = "cpt1",
                 Name = "CoffeePoint1",
                 BigLattePrice = 120,
-                Description = "CoffeePoint1 description"
+                Description = "CoffeePoint1 description xxxxxx"
             };
 
-            _coffeePointsManager.AddNewItem(point1);
+            var rez0101 = _coffeePointsManager.AddNewItem(point1);
 
             CoffeePoint point2 = new CoffeePoint()
             {
                 Alias = "cpt2",
                 Name = "CoffeePoint2",
                 BigLattePrice = 120,
-                Description = "CoffeePoint2 description"
+                Description = "CoffeePoint2 description xxxxxx"
             };
             _coffeePointsManager.AddNewItem(point2);
 
@@ -52,7 +52,7 @@ namespace ActivityScheduler.Data.Managers
                 Alias = "cpt3",
                 Name = "CoffeePoint3",
                 BigLattePrice = 120,
-                Description = "CoffeePoint3 description"
+                Description = "CoffeePoint3 description xxxxxx"
             };
             _coffeePointsManager.AddNewItem(point3);
         }

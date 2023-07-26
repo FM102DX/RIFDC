@@ -290,12 +290,13 @@ namespace RIFDC
 
             // надо как-то узнать, является ли поле геттером, т.к. если это геттер, то знак nullabilityInfo.isNull не был сброшен
             bool isGetter = ObjectParameters.isItOnlyGetter(this, fieldClassName);
+
             if (isNull && isGetter) isNull = false; // геттер не может быть null
 
 
             object defaultValue = f.nullabilityInfo.defaultValue;
 
-            if (nullable & isNull) return null;
+            // if (nullable & isNull) return null;
 
             object value = ObjectParameters.getObjectParameterByName(this, fieldClassName).value;
 
@@ -532,7 +533,7 @@ namespace RIFDC
                 f.addFieldInfoObject("createdByUserId", "createdByUserId", Lib.FieldTypeEnum.String);
             }
 
-            x = f.addFieldInfoObject("searchable", "", Lib.FieldTypeEnum.String);
+            x = f.addFieldInfoObject("searchable", "searchable", Lib.FieldTypeEnum.String);
             x.parameterSignificanceInfo.significanceType = Lib.ParameterSignificanceInfo.ParameterSignificanceTypeEnum.LocallyCountableGetter;
 
 

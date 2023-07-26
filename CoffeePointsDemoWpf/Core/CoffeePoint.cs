@@ -54,32 +54,6 @@ namespace CoffeePointsDemo
             x.nullabilityInfo.defaultValue = "NewCoffeePointAlias";
             x.isSearchable = true;
 
-
-            x = f.addFieldInfoObject("LastVisitDate2", "LastVisitDate2", Lib.FieldTypeEnum.Date);
-            x.nullabilityInfo.allowNull = false;
-            x.caption = "Посл.посещение2";
-            x.nullabilityInfo.defaultValue = Convert.ToDateTime("01.01.2001");
-
-
-            x = f.addFieldInfoObject("BigLattePrice2", "BigLattePrice2", Lib.FieldTypeEnum.Double);
-            x.nullabilityInfo.allowNull = false;
-            x.nullabilityInfo.defaultValue = 100;
-            x.caption = "Цена большого латте2";
-            x.validationInfo.symbolValidation.rules.Add(new VCCommon.VF.com_symbol_double(','));
-            x.validationInfo.leaveValidation.rules.Add(new VCCommon.VF.com_leave_double(',', 2));
-            x.validationInfo.businessValidation.rules.Add(new VCCommon.VF.biz_priceMoreThan80());
-            x.isAvialbeForGroupOperations = true;
-
-
-            x = f.addFieldInfoObject("Description2", "Description2", Lib.FieldTypeEnum.String);
-            x.caption = "Комментарий2";
-            x.nullabilityInfo.allowNull = false;
-            x.nullabilityInfo.defaultValue = "Default Description";
-            x.isSearchable = true;
-            x.isAvialbeForGroupOperations = true;
-
-            x.validationInfo.leaveValidation.rules.Add(new VCCommon.VF.com_leave_snake_style_alias());
-
             return f;
         }
 
@@ -104,10 +78,6 @@ namespace CoffeePointsDemo
                     tmp = "BigLattePrice"; g.addFormatLine(tmp, 50, f.getFieldInfoObjectByFieldClassName(tmp).caption);
                     tmp = "Description"; g.addFormatLine(tmp, 200, f.getFieldInfoObjectByFieldClassName(tmp).caption);
                     tmp = "Alias"; g.addFormatLine(tmp, 150, f.getFieldInfoObjectByFieldClassName(tmp).caption);
-                    tmp = "LastVisitDate2"; g.addFormatLine(tmp, 100, f.getFieldInfoObjectByFieldClassName(tmp).caption);
-                    tmp = "BigLattePrice2"; g.addFormatLine(tmp, 50, f.getFieldInfoObjectByFieldClassName(tmp).caption);
-                    tmp = "Description2"; g.addFormatLine(tmp, 200, f.getFieldInfoObjectByFieldClassName(tmp).caption);
-
 
                     return g;
                 }

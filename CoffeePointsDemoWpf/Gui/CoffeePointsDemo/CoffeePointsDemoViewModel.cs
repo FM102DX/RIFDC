@@ -17,7 +17,7 @@ namespace CoffeePointsDemoWpf
     {
         private Serilog.ILogger _logger;
 
-        public SelectionMode SelectionModeVar { get; set; } = SelectionMode.None;
+        public SelectionMode SelectionModeVar { get; set; } = SelectionMode.SelectNone;
 
         public ICommand FormLoadedCmd { get; private set; }
         public ICommand SaveItemCmd { get; private set; }
@@ -28,8 +28,8 @@ namespace CoffeePointsDemoWpf
         public ICommand CancelRecordEditCmd { get; private set; }
 
         public event SelectionModeChangedDelegate SelectionModeChanged;
-
         public delegate void SelectionModeChangedDelegate(SelectionMode selectionMode);
+
 
         private bool IsModified
         {
@@ -84,7 +84,7 @@ namespace CoffeePointsDemoWpf
             {
                 if (value == null && ItemListItemSource.Count != 0)
                 {
-
+                    SelectionModeVar = SelectionMode.SelectNone;
                     return;
                 }
                 
@@ -92,7 +92,7 @@ namespace CoffeePointsDemoWpf
 
                 if (_selectedItem == null)
                 {
-                    SelectionModeVar = SelectionMode.ActivityModeNoSelection;
+                    SelectionModeVar = SelectionMode.SelectNone;
                     UpdateSelectionMode();
                     SelectedItemDisplayed = null;
                     return;
@@ -102,13 +102,11 @@ namespace CoffeePointsDemoWpf
 
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedItem"));
 
-                SelectionModeVar = SelectionMode.ActivityModeRegularSelection;
+                SelectionModeVar = SelectionMode.SelectRegular;
 
                 UpdateSelectionMode();
             }
         }
-
-        private TimeSpan _actStartTime { get; set; }
 
         private bool _saveActivityStopMarker = false;
 
@@ -133,8 +131,9 @@ namespace CoffeePointsDemoWpf
             {
                 if (_selectedItem != null)
                 {
-                    SaveActivity();
-                    LoadActivities(RecordSelectionMode.SelectSpecifiedId);
+                    SaveItem();
+
+                    LoadActivities(RecordSelectionMode.SelectSpecifiedId, SelectedItemDisplayed.id);
                 }
             });
 
@@ -159,26 +158,50 @@ namespace CoffeePointsDemoWpf
 
             CreateItemCmd = new ActionCommand(() =>
             {
-               // add new activity to batch and re-read it into grid
-               // get all activities for this batch
+                // add new activity to batch and re-read it into grid
+                
+                // get all activities for this batch
 
-                // var activities = _itemManager.GetAll().Result.ToList();
+                var newCoffeePoint = new CoffeePoint()
+                {
+                    Alias = "NewCpt",
+                    Name = "NewCoffeePoint",
+                    BigLattePrice = 100,
+                    LastVisitDate = DateTime.Now,
+                    Description = "This is new coffeepoint description"
+                };
 
-                // LoadActivities(RecordSelectionMode.SelectSpecifiedId, newActivity.Id);
+                var rez = _itemManager.AddNewItem(newCoffeePoint).Result;
 
-                //ShowFormSuccessMessage("Activity saved successfully");
+                LoadActivities(RecordSelectionMode.SelectSpecifiedId, newCoffeePoint.id);
 
             });
 
-            DeleteItemCmd= new ActionCommand(() =>
+            SaveItemCmd = new ActionCommand(() =>
             {
-               /*
-                * if (SelectedItem == null) return;
+                if (_selectedItem != null)
+                {
+                    string id = _selectedItem.id;
+                    SaveItem();
+                    LoadActivities(RecordSelectionMode.SelectSpecifiedId, id);
+                }
+            });
+
+            DeleteItemCmd = new ActionCommand(() =>
+            {
+                if (SelectedItem == null) return;
+
                 var qRez = System.Windows.MessageBox.Show("Really delete?", "", MessageBoxButton.OKCancel);
+                
                 if (qRez == MessageBoxResult.Cancel) return;
-                _itemManager.RemoveItem(SelectedItem.Id);
-                LoadActivities( RecordSelectionMode.SelectLastRecord);
-               */
+
+                var item = _activitiesList.FirstOrDefault();
+
+                if (item!=null)
+                {
+                    _itemManager.RemoveItem(item);
+                    LoadActivities(RecordSelectionMode.SelectLastRecord);
+                }
             });
 
             LoadActivities(RecordSelectionMode.SelectFirstRecord);
@@ -191,11 +214,11 @@ namespace CoffeePointsDemoWpf
 
                 if (mbxRez == MessageBoxResult.Yes)
                 {
-                    SaveActivity();
+                    SaveItem();
 
                     if (SelectedItemDisplayed!=null)
                     {
-                        LoadActivities(RecordSelectionMode.SelectSpecifiedId);
+                        LoadActivities(RecordSelectionMode.SelectSpecifiedId, _selectedItem.id);
                     }
                     else
                     {
@@ -227,7 +250,7 @@ namespace CoffeePointsDemoWpf
 
                 if (mbxRez == MessageBoxResult.Yes)
                 {
-                    if (SaveActivity())
+                    if (SaveItem())
                     {
                         //saved successfully
                         return false;
@@ -251,39 +274,28 @@ namespace CoffeePointsDemoWpf
                     if (SelectedItem != null) SelectedItemDisplayed = _itemManager.Clone(SelectedItem); else SelectedItemDisplayed = null;
                     return false;
                 }
-
                 if (mbxRez == MessageBoxResult.Cancel)
                 {
                     return true;
                 }
-
             }
             return false;
         }
 
-        private bool SaveActivity()
+        private bool SaveItem()
         {
             if (SelectedItemDisplayed == null) { return false; }
+            if (!IsModified) { return true; }
             var rez = _itemManager.ModifyItem(SelectedItemDisplayed).Result;
+            
             if (!rez.Success)
             {
-                ShowFormErrorMessage(rez.Message);
                 return false;
             }
-            ShowFormSuccessMessage("Activity saved successfully");
             return true;
         }
-        private void ShowFormErrorMessage(string text)
-        {
-            MessageBox.Show(text,"Operation error", MessageBoxButton.OK , MessageBoxImage.Error);
-        }
 
-        private void ShowFormSuccessMessage(string text)
-        {
-            MessageBox.Show(text, "Operation successful", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void LoadActivities(RecordSelectionMode recordSelectionMode= RecordSelectionMode.SelectNone, Guid? selectedItemId = null)
+        private void LoadActivities(RecordSelectionMode recordSelectionMode= RecordSelectionMode.SelectNone, string? selectedItemId = null)
         {
             ItemListItemSource = _itemManager.GetAll().Result;
             
@@ -334,10 +346,8 @@ namespace CoffeePointsDemoWpf
 
         public enum SelectionMode
         {
-            None=0,
-            GroupMode = 1,
-            ActivityModeNoSelection = 2,
-            ActivityModeRegularSelection = 3
+            SelectNone = 0,
+            SelectRegular = 1
         }
         public enum SelectionMode2
         {
@@ -354,7 +364,10 @@ namespace CoffeePointsDemoWpf
             DontPerformSelection=4
         }
 
+        public enum SaveOrNotMode
+        {
+            CanSave = 0,
+            CannotSave = 1
+        }
     }
-
-
 }

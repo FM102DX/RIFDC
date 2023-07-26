@@ -53,10 +53,8 @@ namespace CoffeePointsDemoWpf
 
             services.AddScoped<CoffeePointsDemoViewModel>();
             services.AddScoped<CoffeePointsManager>();
-            services.AddScoped<CoffeePointsManager>();
             services.AddSingleton(typeof(ItemKeeper<CoffeePoint>), (x) => keeper);
             services.AddScoped<DataFillManager>();
-            
 
         }
 
@@ -65,8 +63,6 @@ namespace CoffeePointsDemoWpf
             _logger = _serviceProvider.GetService<Serilog.ILogger>();
 
             _logger.Information("Starting Rifdc wpf demo app");
-
-            var window = _serviceProvider.GetService<CoffeePointsDemoFrm>();
 
             var app = _serviceProvider.GetService<ApplicatonObject>();
 
@@ -78,8 +74,12 @@ namespace CoffeePointsDemoWpf
             }
 
             var dataFillManager = _serviceProvider.GetService<DataFillManager>();
+            
+            //dataFillManager?.FillTheModel();
 
             var repo = _serviceProvider.GetService<ItemKeeper<CoffeePoint>>();
+
+            var window = _serviceProvider.GetService<CoffeePointsDemoFrm>();
 
             repo.readItems();
 

@@ -3,33 +3,95 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CoffeePointsDemoWpf"
+        xmlns:local="clr-namespace:CoffeePointsDemoWpf" xmlns:wpfx="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="CoffeePointsDemo" Height="450" Width="800">
-    <Grid>
+    <Grid Margin="0,0,0,-16">
+        <Button Content="NewItem"       HorizontalAlignment="Left"  Margin="13,12,0,0"     VerticalAlignment="Top"    Width="99"       Name="NewBtn"              Command="{Binding CreateItemCmd}" />
+        <Button Content="SaveItem"      HorizontalAlignment="Left"  Margin="121,12,0,0"     VerticalAlignment="Top"    Width="98"       Name="SaveBtn"             Command="{Binding SaveItemCmd}"   />
+        <Button Content="DeleteItem"    HorizontalAlignment="Left"  Margin="229,12,0,0"    VerticalAlignment="Top"    Width="98"       Name="DeleteBtn"           Command="{Binding DeleteItemCmd}" />
+
         <DataGrid 
             HorizontalAlignment="Left"
-            x:Name="ActivityGrid" 
-            Height="414" 
-            Margin="10,0,0,0" 
-            VerticalAlignment="Center" 
-            Width="552" 
+            x:Name="ItemGrid" 
+            Height="372" 
+            Margin="10,43,0,0" 
+            VerticalAlignment="Top" 
+            Width="490" 
             SelectionMode="Single" 
             IsReadOnly="True" 
             CanUserAddRows="False" 
             SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ItemsSource="{Binding AcivityListItemSource, Mode=OneWay}"
+            ItemsSource="{Binding ItemListItemSource, Mode=OneWay}"
             AutoGenerateColumns="False"
             SelectionUnit="FullRow"
-            CellStyle="{DynamicResource DataGridCellStyle1}" >
+            CellStyle="{DynamicResource DataGridCellStyle1}" PreviewMouseDown="ItemGrid_PreviewMouseDown" >
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name"               Binding="{Binding ActivityId}"                   IsReadOnly="True" MinWidth="70"/>
-                <DataGridTextColumn Header="LastVisitDate"      Binding="{Binding ParentActivities}"             IsReadOnly="True" Width="100"/>
-                <DataGridTextColumn Header="BigLattePrice"      Binding="{Binding Name}"                         IsReadOnly="True" Width="170"/>
-                <DataGridTextColumn Header="Alias"              Binding="{Binding TransactionId}"                IsReadOnly="True" Width="70"/>
-                <DataGridTextColumn Header="Comment"            Binding="{Binding StartTime}"                    IsReadOnly="True" Width="70"/>
+                <DataGridTextColumn Header="Name"               Binding="{Binding Name}"   IsReadOnly="True" MinWidth="100"/>
+                <DataGridTemplateColumn Header="LastVisitDate">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding LastVisitDate, StringFormat=dd.mm.yyyy}" FontFamily="Verdana" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="BigLattePrice"      Binding="{Binding BigLattePrice}"             IsReadOnly="True" Width="80"/>
+                <DataGridTextColumn Header="Alias"              Binding="{Binding Alias}"                     IsReadOnly="True" Width="70"/>
+                <DataGridTextColumn Header="Description"        Binding="{Binding Description}"               IsReadOnly="True" Width="70"/>
             </DataGrid.Columns>
         </DataGrid>
+
+        <Canvas x:Name="EditCvn" HorizontalAlignment="Left" Height="384" Margin="519,0,0,0" VerticalAlignment="Center" Width="252">
+            <TextBox 
+                        TextWrapping="Wrap" 
+                        x:Name="CoffeePointNameTb" 
+                        Width="196" 
+                        Canvas.Left="10" 
+                        Canvas.Top="10" 
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Top" 
+                        Height="20"     
+                        Text="{Binding SelectedItemDisplayed.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <wpfx:MaskedTextBox 
+                                Width="92" 
+                                Height="18" 
+                                Mask="000" 
+                                Canvas.Left="10" 
+                                Canvas.Top="79" 
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Center" 
+                                x:Name="BigLattePriceTb"
+                                Text="{Binding SelectedItemDisplayed.BigLattePrice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBox 
+                        TextWrapping="Wrap" 
+                        x:Name="AliasTb" 
+                        Width="196" 
+                        Canvas.Left="10" 
+                        Canvas.Top="45" 
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Top" 
+                        Height="20"     
+                        Text="{Binding SelectedItemDisplayed.Alias, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBox 
+                        TextWrapping="Wrap"
+                        x:Name="DescriptionTb" 
+                        Width="196" 
+                        Canvas.Left="10" 
+                        Canvas.Top="154" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Top" 
+                        Height="210"     
+                        Text="{Binding SelectedItemDisplayed.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <DatePicker 
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Center" 
+                        SelectedDate="{Binding SelectedItemDisplayed.LastVisitDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Canvas.Left="10" Canvas.Top="112"/>
+
+        </Canvas>
+
     </Grid>
 </Window>

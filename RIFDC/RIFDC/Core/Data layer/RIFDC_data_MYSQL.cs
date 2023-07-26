@@ -303,7 +303,7 @@ namespace RIFDC
         public Lib.DbOperationResult saveObject(IKeepable t)
         {
             //этот метод сохраняет объект IKeeper в базе 
-            //Если есть ID, то это обновление. Если нет ID - добавление
+            //Если есть ID, то это обновление. Если нет ID - добавление 
 
             string commStr;
             MySqlCommand com;
@@ -342,8 +342,11 @@ namespace RIFDC
                         commStr = generateInsertCommand(t);
 
                         Logger.log("DB", "Executing query: " + commStr);
+
                         com = new MySqlCommand(commStr, activeConnection);
+
                         com.ExecuteNonQuery();
+
                         success = true;
 
                         break;
@@ -648,12 +651,16 @@ namespace RIFDC
             foreach (Lib.FieldInfo f in t.fieldsInfo.fields)
             {
                 //добавляем поля
-                if (f.parameterSignificanceInfo.significanceType!= Lib.ParameterSignificanceInfo.ParameterSignificanceTypeEnum.Solid) continue;
+                if (f.parameterSignificanceInfo.significanceType!= Lib.ParameterSignificanceInfo.ParameterSignificanceTypeEnum.Solid)
+                { 
+                        continue;
+                }
 
                 /*
                 bool needsComma = f.isStringValue | f.fieldType == Lib.FieldTypeEnum.Date | f.fieldType == Lib.FieldTypeEnum.Time | f.fieldType == Lib.FieldTypeEnum.DateTime;
                 string b = (needsComma) ? "'" : ""; //если это строка или даты, то нужны кавычки
-*/
+                */
+
                 string comma = i == howMenySolidFields - 1 ? "" : ","; //запятая
                 cmdText = cmdText + f.fieldDbName + comma;
                 s0 = insertUpdateValueCorrection(t, f, t.getMyParameter(f.fieldClassName));
@@ -1005,7 +1012,7 @@ namespace RIFDC
                     try
                     {
                         //если нет, создаем таблицу
-                        createTableQuery = "CREATE TABLE " + tableName + " (id  VARCHAR(50) NOT NULL UNIQUE)";
+                        createTableQuery = "CREATE TABLE " + tableName + " (id  VARCHAR(200) NOT NULL UNIQUE)";
                         MySqlCommand com = new MySqlCommand(createTableQuery, activeConnection);
                         Logger.log("DB", "EXECUTING QUERY: " + createTableQuery);
                         //A table must have at least 1 column - эту шоибку выдал MySql
@@ -1064,7 +1071,7 @@ namespace RIFDC
                     if (!fIsNull)
                     {
                         nullTxt = f.nullabilityInfo.allowNull ? "NULL" : "NOT NULL";
-                        defaultTxt = f.nullabilityInfo.defaultValue == null ? "" : "DEFAULT " + valueForDbWithQuotes(f, f.nullabilityInfo.defaultValue);
+                        defaultTxt = ""; //f.nullabilityInfo.defaultValue == null ? "" : "DEFAULT " + valueForDbWithQuotes(f, f.nullabilityInfo.defaultValue);
                     }
 
                     if (fIsNull && tagIsEmpty) { tag = " TEXT NULL"; } //ну то есть если нет филдинфо и тега, то это будет просто текстовое поле

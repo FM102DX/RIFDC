@@ -18,6 +18,7 @@ namespace CoffeePointsDemo
         private ItemKeeper<CoffeePoint> _repo;
 
         public CheckExecutor<Activity> _checker = new CheckExecutor<Activity>();
+
         public List<CoffeePoint> _itemsList = new List<CoffeePoint>();
 
         private void ReadItemsList()
@@ -108,7 +109,6 @@ namespace CoffeePointsDemo
             */
         }
 
-
         public Task<CommonOperationResult> AddNewItem(CoffeePoint item)
         {
             var rez = _repo.saveItem(item);
@@ -121,6 +121,12 @@ namespace CoffeePointsDemo
             var items = _repo.actualItemList.Cast<CoffeePoint>().ToList();
             return Task.FromResult(items);
         }
+
+        public Task<CoffeePoint> GetItemById(string id)
+        {
+            return Task.FromResult((CoffeePoint)_repo.getItemById(id));
+        }
+
         public Task<CommonOperationResult> ModifyItem(CoffeePoint item)
         {
             /* var btc = _checker.PerformCheck("Update", activity);
@@ -151,10 +157,16 @@ namespace CoffeePointsDemo
         {
             _repo.readItems();
 
-            foreach (var item in _repo.actualItemList)
-            {
-                _repo.deleteItem(item);
-            }
+            var idList = _repo.actualItemList.Select(select => select.id).ToList();
+
+            idList.ForEach(x => {
+
+                var _item = _repo.getItemById(x);
+
+                _repo.deleteItem(_item);
+
+            });
+
             return Task.FromResult(CommonOperationResult.SayOk());
         }
 
@@ -178,6 +190,7 @@ namespace CoffeePointsDemo
                         original.BigLattePrice == compare.BigLattePrice;
             return rez;
         }
+
         public CoffeePoint Clone(CoffeePoint source)
         {
             CoffeePoint acv = new CoffeePoint();
