@@ -3,6 +3,8 @@ C# framework to create data-oriented applications
 https://develop.ricompany.info/RIFDC/
 
 # Change log
+__26.Jul.2023__
+Written WPF demo, removed winforms project (left in separate branch)
 
 __23.Jul.2023__
 Moved to dotnet 6.0
